@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{url}
+\usepackage{pbox}
+\usepackage{hyperref}
+%\usepackage[utf8]{inputenc}
+\usepackage{listliketab}
+%\usepackage[margin=1.0in]{geometry}
+\usepackage[left=2cm,top=2cm,bottom=1.5cm,right=2cm,includefoot]{geometry}
+\usepackage{natbib}  % Requires natbib.sty, available from http://ads.harvard.edu/pubs/bibtex/astronat/
+%\usepackage[sorting=ydnt]{biblatex}
+%\setlength{\bibsep}{0pt}
+\citestyle{aa}  % (Author YYYY) references instead of (Author, YYYY)
+\newcommand\apj{{ApJ}}%
+\newcommand\apjl{{ApJ}}%
+\newcommand\aj{{AJ}}%
+\newcommand\aap{{A\&A}}%
+\newcommand\apss{{Ap\&SS}}%
+\newcommand\araa{{ARA\&A}}%
+\newcommand\nat{{Nature}}%
+\newcommand\aapr{{A\&A~Rev.}}%
+\newcommand\mnras{{MNRAS}}%
+\newcommand\apjs{{ApJS}}%
+\newcommand\pasp{{PASP}}%
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{}{}
+\pagestyle{empty} % no page numbers 
+\newcommand{\myname}[1]{\textbf{{\normalsize #1}}}
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\fancyhf{}
+
+
+\usepackage{totcount}
+
+\newtotcounter{citnum} %From the package documentation
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+\renewcommand{\refname}{Refereed Publications [9 first author, \total{citnum} total]:}

@@ -1,0 +1,46 @@
+\RequirePackage{filecontents}
+
+\begin{filecontents}{\jobname.bib}
+    @article{one,
+        author = {Bee, B. and Wombat, W.},
+        title = {Loving cobblestone},
+        journal = {Stones weekly},
+        year = {2015},
+        keywords = {mefirst}
+    }
+    @article{two,
+        author = {Wombat, W. and Bee, B.},
+        title = {Flying Penguins},
+        journal = {MP Monthly},
+        year = {2015}
+    }
+    @article{three,
+        author = {Bee, Busy and Wombat, Walzing and Penguins},
+        title = {Animal Friendships},
+        journal = {Madagascar Quarterly},
+        year = {2015},
+        keywords = {mefirst}
+    }
+\end{filecontents}
+\documentclass{article}
+\usepackage{biblatex}
+\addbibresource{\jobname.bib}
+
+
+\defbibheading{bibliography}[]{\section*{Refereed Publications}
+\arabic{firstA} as first author, a total of \arabic{sum}\medbreak
+}
+\newcounter{firstA}
+\newcounter{notfirst}
+\AtDataInput{%
+    \ifboolexpr{ test {\ifkeyword{mefirst}} }
+    { \stepcounter{firstA} }
+    { \stepcounter{notfirst} }%
+}
+\newcounter{sum}
+
+\begin{document}
+\defcounter{sum}{\value{firstA}+\value{notfirst}}
+\nocite{*}
+\printbibliography
+\end{document}
