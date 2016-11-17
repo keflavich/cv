@@ -667,11 +667,72 @@ FUNCTION {word.in}
 { bbl.in
   " " * }
 
+FUNCTION {print.format.month}
+{ 't :=
+  t #1 #3 substring$ "l" change.case$ "jan" =
+    { "January"  }
+    { t #1 #3 substring$ "l" change.case$ "feb" =
+      { "February"  }
+      { t #1 #3 substring$ "l" change.case$ "mar" =
+        { "March"  }
+        { t #1 #3 substring$ "l" change.case$ "apr" =
+          { "April"  }
+          { t #1 #3 substring$ "l" change.case$ "may" =
+            { "May"  }
+            { t #1 #3 substring$ "l" change.case$ "jun" =
+              { "June"  }
+              { t #1 #3 substring$ "l" change.case$ "jul" =
+                { "July"  }
+                { t #1 #3 substring$ "l" change.case$ "aug" =
+                  { "August"  }
+                  { t #1 #3 substring$ "l" change.case$ "sep" =
+                    { "September"  }
+                    { t #1 #3 substring$ "l" change.case$ "oct" =
+                      { "October"  }
+                      { t #1 #3 substring$ "l" change.case$ "nov" =
+                        { "November"  }
+                        { t #1 #3 substring$ "l" change.case$ "dec" =
+                          { "December"  }
+                          { t #1 #3 substring$ "l" change.case$ "sub" =
+                              {"14"}
+                              { t #1 #3 substring$ "l" change.case$ "acc" =
+                                  {"13"}
+                                  { "00"  } % No match
+                                if$
+                                }
+                            if$
+                            }
+                        if$
+                        }
+                      if$
+                      }
+                    if$
+                    }
+                  if$
+                  }
+                if$
+                }
+              if$
+              }
+            if$
+            }
+          if$
+          }
+        if$
+        }
+      if$
+      }
+    if$
+    }
+  if$
+}
+
+
 
 FUNCTION {format.month}
 { month empty$
    { "" }
-   { month }
+   { month print.format.month }
    if$ 
    mid.sentence 'output.state :=
 }
@@ -1014,7 +1075,8 @@ FUNCTION {format.ed.booktitle} % The title should be on the stack.
 FUNCTION {format.title}
 { title empty$
     { "" }
-    { title "t" change.case$ emphasize2 }
+    %{ title "t" change.case$ emphasize2 }
+    { title emphasize2 }
   if$
 }
 
@@ -1084,9 +1146,10 @@ FUNCTION {article}
       %"empty citations" warning$ 
   }
   {   
-      " [ "
+      ""
       format.citations *
-      " Citations ]" *
+      " Citation(s)" *
+      emphasize2
       output
   }
   if$
