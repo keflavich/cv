@@ -24,6 +24,7 @@ mwe: clean
 	${PDFLATEX} mwe.tex
 
 pubs: clean
+	python add_citations.py
 	${PDFLATEX} pubs.tex
 	${BIBTEX} pubs
 	${PDFLATEX} pubs.tex
