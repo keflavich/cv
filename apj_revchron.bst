@@ -79,6 +79,7 @@ ENTRY
     type
     volume
     year
+    eprint
     citations
   }
   {}
@@ -1140,6 +1141,15 @@ FUNCTION {article}
   if$
   format.journal.pages
   format.note output
+  
+  journal missing$
+     { eprint missing$
+         { }
+         { "ArXiv:" eprint * output }
+         if$
+     }
+     {}
+     if$
 
   format.citations empty$
   { 
