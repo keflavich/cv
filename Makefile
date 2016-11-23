@@ -25,6 +25,7 @@ mwe: clean
 
 pubs: clean
 	python add_citations.py
+	python update_journals.py
 	${PDFLATEX} pubs.tex
 	${BIBTEX} pubs
 	${PDFLATEX} pubs.tex
@@ -32,6 +33,7 @@ pubs: clean
 	${PDFLATEX} pubs.tex
 
 cv: clean
+	python update_journals.py
 	${PDFLATEX} cv.tex
 	${BIBTEX} cv
 	${PDFLATEX} cv.tex
