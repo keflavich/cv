@@ -27,6 +27,10 @@ for entry in bib_database.entries:
               .format(entry))
         continue
 
+    ratelimits = paper.response.get_ratelimits()
+    if int(ratelimits['remaining']) < 1:
+        raise ValueError("Rate limit of ADS queries exceeded.")
+
     print(paper.articles, paper.articles[0])
     assert len(paper.articles) == 1
     article = paper.articles[0]
