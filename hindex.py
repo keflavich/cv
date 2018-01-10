@@ -44,6 +44,13 @@ for ii, nc in enumerate(citations[::-1]):
         break
 
 print("Computed H-index {0}".format(h_index))
+print()
+print("Titles contributing to H-index: ")
+print("\n".join(["{3}: {0}, {1}{2}".format(art.title[0],
+                                           art.first_author,
+                                           art.pubdate,
+                                           art.citation_count)
+                 for art in papers if art.citation_count >= h_index]))
 
 with open('hindex.tex', 'w') as fh:
     fh.write("\\newcommand{{\\nrefereed}}{{{0}}}\n".format(len(papers)))
