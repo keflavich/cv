@@ -8,7 +8,18 @@ print("Today is {0}".format(datetime.datetime.now().strftime("%D")))
 
 ads.config.token = get_dev_key()
 
-mypapers = ads.SearchQuery(author='Ginsburg, A', rows=300)
+mypapers = ads.SearchQuery(author='Ginsburg, A', rows=900, fl=['id', 'bibcode',
+                                                               'title',
+                                                               'citation_count',
+                                                               'property',
+                                                               'database',
+                                                               'first_author',
+                                                               'first_author_norm',
+                                                               'pubdate',
+                                                               'identifier',
+                                                               'author',
+                                                               'year',
+                                                               'pubdate', ])
 mypapers.execute()
 
 print("Found {0} papers matching Ginsburg, A".format(len(mypapers.articles)))
@@ -64,21 +75,22 @@ with open('hindex.tex', 'w') as fh:
 with open('cv.bib','r') as fh:
     bib_database = bibtexparser.load(fh)
 
-print("cv.bib matches:")
+print()
+print("cv.bib matches: (blank means good)")
 matches = {}
 for entry in bib_database.entries:
     doi = entry.get('doi')
     bibcode = entry['adsurl'].split("/")[-1].replace("%26","&") if 'adsurl' in entry else None
     match = [art for art in papers if doi in art.identifier or bibcode in art.identifier]
     if len(match) == 0:
-        print("No match for {0}".format(entry.get('title')))
+        print("No match for {0}, which is in cv.bib, in downloaded papers".format(entry.get('title')))
     elif len(match) > 1:
-        print("Multiple matches for {0}".format(entry.get('title')))
+        print("Multiple matches for {0} among downloaded papers".format(entry.get('title')))
     else:
         matches[bibcode] = match[0]
         
 print()
-print("ADS search matches:")
+print("ADS search matches (blank means good):")
 
 reverse_matches = {}
 for art in papers:
@@ -90,8 +102,9 @@ for art in papers:
              bibcode in entry.get('adsurl', '').replace("%26","&")
             ]
     if len(match) == 0:
-        print("No match for {0}".format(art.title, art.bibcode))
+        print("No match for {0} in cv.bib: {1}".format(art.title, art.bibcode))
     elif len(match) > 1:
-        print("Multiple matches for {0}".format(art.title))
+        print("Multiple matches for {0} in cv.bib.  doi: {1} bibcode: {2}".format(art.title, art.identifier, bibcode))
+        raise
     else:
         reverse_matches[bibcode] = match[0]
