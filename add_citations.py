@@ -11,14 +11,15 @@ with open('cv.bib','r') as fh:
 
 for entry in bib_database.entries:
     if 'doi' in entry:
-        paper = ads.SearchQuery(doi=entry['doi'])
+        paper = ads.SearchQuery(doi=entry['doi'], fl=['citation_count', 'author', 'year', 'id', 'bibcode'])
         paper.execute()
 
         ratelimits = paper.response.get_ratelimits()
         if int(ratelimits['remaining']) < 1:
             raise ValueError("Rate limit of ADS queries exceeded.")
 
-        print(paper.articles, paper.articles[0])
+        #print(paper.articles, paper.articles[0])
+        print(paper.articles[0].bibcode, paper.articles[0].citation_count)
         assert len(paper.articles) == 1
         entry['citations'] = "{0}".format(paper.articles[0].citation_count)
 

@@ -12,6 +12,11 @@ with open('cv.bib','r') as fh:
 
 
 for entry in bib_database.entries:
+
+    if "{Ginsburg}" in entry['author'] and 'myname' not in entry['author']:
+        entry['author'] = entry['author'].replace("{Ginsburg}", "{\\myname{Ginsburg}}")
+
+
     if 'doi' in entry and 'journal' not in entry:
         print("Attempting to determine Journal for {0}: {1}".format(entry['doi'],
                                                                     entry['ID'])
@@ -21,11 +26,35 @@ for entry in bib_database.entries:
                                                       'year', 'adsurl',
                                                       'first_author', 'author',
                                                       'bibcode', 'articles',
-                                                      'volume'])
-        paper.execute()
+                                                      'volume', 'doi'])
     elif 'journal' in entry:
-        print("Entry {0} is already complete".format(entry['ID']))
-        continue
+        if 'doi' not in entry:
+            if 'adsurl' in entry:
+                adsurl = entry['adsurl'].split("/")[-1].replace("%26","&") if 'adsurl' in entry else None
+                print("Loading journal from ADS URL {0}".format(adsurl))
+                paper = ads.SearchQuery(bibcode=adsurl,
+                                        fl=['bibtex', 'journal', 'pages', 'eid',
+                                            'month', 'year', 'adsurl', 'first_author',
+                                            'author', 'bibcode', 'articles', 'volume',
+                                            'doi'])
+            elif 'eprint' in entry:
+                print("Found eprint but no journal for {0}".format(entry['eprint']))
+                arxivid = entry['eprint'].split("v")[0]
+                paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
+                                                           'pages', 'eid', 'month',
+                                                           'articles', 'year',
+                                                           'first_author', 'author', 'bibcode',
+                                                           'adsurl', 'volume'])
+            else:
+                print("Trying to ID article from title {0}".format(entry['title']))
+                paper = ads.SearchQuery(title=entry['title'],
+                                        fl=['bibtex', 'journal', 'pages', 'eid',
+                                            'month', 'year', 'adsurl', 'first_author',
+                                            'author', 'bibcode', 'articles', 'volume',
+                                            'doi'])
+        else:
+            print("Entry {0} is already complete".format(entry['ID']))
+            continue
     elif 'eprint' in entry:
         print("Found eprint but no journal for {0}".format(entry['eprint']))
         arxivid = entry['eprint'].split("v")[0]
@@ -34,20 +63,21 @@ for entry in bib_database.entries:
                                                    'articles', 'year',
                                                    'first_author', 'author', 'bibcode',
                                                    'adsurl', 'volume'])
-        paper.execute()
     else:
         print("Could not search for entry: {0} because there is no journal or doi"
               .format(entry))
         continue
+    paper.execute()
 
     ratelimits = paper.response.get_ratelimits()
     if int(ratelimits['remaining']) < 1:
         raise ValueError("Rate limit of ADS queries exceeded.")
 
-    print(paper.articles, paper.articles[0])
+    print(paper.articles, paper.articles[0], [p.bibcode for p in paper.articles], [p.adsurl for p in paper.articles if hasattr(p,'adsurl')])
     assert len(paper.articles) == 1
     article = paper.articles[0]
     try:
+        parser = bibtexparser.bparser.BibTexParser(common_strings=True)
         entry_bibtex = parser.parse(article.bibtex).entries[0]
     except Exception as ex:
         print("Failed to parse {0} because of {1}"
@@ -55,10 +85,14 @@ for entry in bib_database.entries:
         continue
 
     for key in ('journal', 'pages', 'eid', 'month', 'year', 'adsurl',
-                'volume'):
+                'volume', 'doi'):
         if key in entry_bibtex:
+            if key in entry:
+                old = entry[key]
+            else:
+                old = '[empty]'
             entry[key] = entry_bibtex[key]
-            print("Updated {0} to {1}".format(key, entry[key]))
+            print("Updated {0} from {2} to {1}".format(key, entry[key], old))
 
 
 with open('cv.bib','w') as fh:
