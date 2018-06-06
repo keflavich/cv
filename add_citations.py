@@ -12,16 +12,25 @@ with open('cv.bib','r') as fh:
 for entry in bib_database.entries:
     if 'doi' in entry:
         paper = ads.SearchQuery(doi=entry['doi'], fl=['citation_count', 'author', 'year', 'id', 'bibcode'])
-        paper.execute()
+        pfx = "Loaded from doi {0}".format(entry['doi'])
+    elif 'adsurl' in entry:
+        adsurl = entry['adsurl'].split("/")[-1].replace("%26","&") if 'adsurl' in entry else None
+        paper = ads.SearchQuery(bibcode=adsurl, fl=['citation_count', 'author', 'year', 'id', 'bibcode'])
+        pfx = "Loaded from adsurl {0}".format(adsurl)
+    else:
+        print("Skipped {0} because it has no DOI or ADSURL".format(entry['title']))
+        continue
 
-        ratelimits = paper.response.get_ratelimits()
-        if int(ratelimits['remaining']) < 1:
-            raise ValueError("Rate limit of ADS queries exceeded.")
+    paper.execute()
 
-        #print(paper.articles, paper.articles[0])
-        print(paper.articles[0].bibcode, paper.articles[0].citation_count)
-        assert len(paper.articles) == 1
-        entry['citations'] = "{0}".format(paper.articles[0].citation_count)
+    ratelimits = paper.response.get_ratelimits()
+    if int(ratelimits['remaining']) < 1:
+        raise ValueError("Rate limit of ADS queries exceeded.")
+
+    #print(paper.articles, paper.articles[0])
+    print(pfx, paper.articles[0].bibcode, paper.articles[0].citation_count)
+    assert len(paper.articles) == 1
+    entry['citations'] = "{0}".format(paper.articles[0].citation_count)
 
 with open('cv_cites.bib','w') as fh:
     bibtexparser.dump(bib_database, fh)

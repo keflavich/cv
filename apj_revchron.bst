@@ -1153,7 +1153,7 @@ FUNCTION {article}
 
   format.citations empty$
   { 
-      %"empty citations" warning$ 
+      "empty citations" warning$ 
   }
   {   
       ""
@@ -1164,7 +1164,7 @@ FUNCTION {article}
   }
   if$
 
-  %format.citations "citations" output.check
+  %format.c}itations "citations" output.check
   fin.entry
 }
 
