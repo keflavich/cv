@@ -68,6 +68,13 @@ cv_erc:
 	${BIBTEX} cv_erc
 	${PDFLATEX} cv_erc.tex
 
+cv_withrefs:
+	${PDFLATEX} cv_withrefs.tex
+	${BIBTEX} cv_withrefs
+	${PDFLATEX} cv_withrefs.tex
+	${BIBTEX} cv_withrefs
+	${PDFLATEX} cv_withrefs.tex
+
 
 clean: 
 	@rm -f *.aux *.bbl *.blg *.dvi *.log *.out *.idv *.lg *.bcf
