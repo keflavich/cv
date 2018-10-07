@@ -4,6 +4,7 @@ from astropy.utils.console import ProgressBar
 import bibtexparser
 from get_dev_key import get_dev_key
 
+print("hindex")
 print("Today is {0}".format(datetime.datetime.now().strftime("%D")))
 
 ads.config.token = get_dev_key()
