@@ -27,6 +27,9 @@ for entry in bib_database.entries:
     if int(ratelimits['remaining']) < 1:
         raise ValueError("Rate limit of ADS queries exceeded.")
 
+    if len(paper.articles) == 0:
+        print("ERROR: Skipping {0} because it wasn't found.".format(entry['title']))
+        continue
     #print(paper.articles, paper.articles[0])
     print(pfx, paper.articles[0].bibcode, paper.articles[0].citation_count)
     assert len(paper.articles) == 1
