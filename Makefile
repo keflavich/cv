@@ -9,6 +9,7 @@ TARGETS= current_research.ps
 
 
 all: cv cv_nopubs pubs cv_terse cv_terse_withobs
+	python update_journals.py
 	${PDFLATEX} pubs.tex
 	#gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=merged.pdf coverletter.pdf ginsburg_cv.pdf current_research.pdf proposal.pdf
 	#${PDFLATEX} merged.tex
@@ -33,7 +34,6 @@ pubs: clean
 	${PDFLATEX} pubs.tex
 
 cv: clean
-	python update_journals.py
 	${PDFLATEX} cv.tex
 	${BIBTEX} cv
 	${PDFLATEX} cv.tex
