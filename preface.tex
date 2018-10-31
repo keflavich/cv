@@ -37,4 +37,8 @@
 \def\oldbibitem{} \let\oldbibitem=\bibitem
 \def\bibitem{\stepcounter{citnum}\oldbibitem}
 
-\renewcommand{\refname}{Refereed Publications as of \today\ [14 first author, \total{citnum} total]:}
+\input{ncites}
+
+\renewcommand{\refname}{Refereed Publications as of \today\\
+14 first author, \total{citnum} total, with \ncitestotal\ citations:}
+

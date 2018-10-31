@@ -8,6 +8,8 @@ ads.config.token = get_dev_key()
 with open('cv.bib','r') as fh:
     bib_database = bibtexparser.load(fh)
 
+total_cites = 0
+total_firstauthor_cites = 0
 
 for entry in bib_database.entries:
     if 'doi' in entry:
@@ -35,5 +37,13 @@ for entry in bib_database.entries:
     assert len(paper.articles) == 1
     entry['citations'] = "{0}".format(paper.articles[0].citation_count)
 
+    total_cites += paper.articles[0].citation_count
+    if "ginsburg" in paper.articles[0].author[0].lower():
+        total_firstauthor_cites += paper.articles[0].citation_count
+
 with open('cv_cites.bib','w') as fh:
     bibtexparser.dump(bib_database, fh)
+
+with open('ncites.tex', 'w') as fh:
+    fh.write("\\newcommand{{\\ncitestotal}}{{{0}}}\n".format(total_cites))
+    fh.write("\\newcommand{{\\nfirstcitestotal}}{{{0}}}\n".format(total_firstauthor_cites))
