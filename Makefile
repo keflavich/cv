@@ -1,5 +1,6 @@
 # latex Makefile
-texpath=/usr/texbin/
+#texpath=/usr/texbin/
+texpath=""
 #TEXINPUTS=.:/Users/adam/papers/latexfiles:
 LATEX=${texpath}latex
 PDFLATEX=${texpath}pdflatex -halt-on-error
