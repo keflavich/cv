@@ -29,7 +29,23 @@ for entry in bib_database.entries:
                                                       'volume', 'doi'])
     elif 'journal' in entry:
         if 'doi' not in entry:
-            if 'adsurl' in entry:
+            if 'eprint' in entry:
+                print("Found eprint for {0}".format(entry['eprint']))
+                arxivid = entry['eprint'].split("v")[0]
+                paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
+                                                           'pages', 'eid', 'month',
+                                                           'articles', 'year',
+                                                           'first_author', 'author', 'bibcode',
+                                                           'adsurl', 'volume'])
+            elif 'eid' in entry:
+                print("Found eid for {0}".format(entry['eid']))
+                arxivid = entry['eid'].split(":")[1].split("v")[0]
+                paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
+                                                           'pages', 'eid', 'month',
+                                                           'articles', 'year',
+                                                           'first_author', 'author', 'bibcode',
+                                                           'adsurl', 'volume'])
+            elif 'adsurl' in entry:
                 adsurl = entry['adsurl'].split("/")[-1].replace("%26","&") if 'adsurl' in entry else None
                 print("Loading journal from ADS URL {0}".format(adsurl))
                 paper = ads.SearchQuery(bibcode=adsurl,
@@ -37,17 +53,9 @@ for entry in bib_database.entries:
                                             'month', 'year', 'adsurl', 'first_author',
                                             'author', 'bibcode', 'articles', 'volume',
                                             'doi'])
-            elif 'eprint' in entry:
-                print("Found eprint but no journal for {0}".format(entry['eprint']))
-                arxivid = entry['eprint'].split("v")[0]
-                paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
-                                                           'pages', 'eid', 'month',
-                                                           'articles', 'year',
-                                                           'first_author', 'author', 'bibcode',
-                                                           'adsurl', 'volume'])
             else:
                 print("Trying to ID article from title {0}".format(entry['title']))
-                paper = ads.SearchQuery(title=entry['title'],
+                paper = ads.SearchQuery(title=entry['title'].strip('{}'),
                                         fl=['bibtex', 'journal', 'pages', 'eid',
                                             'month', 'year', 'adsurl', 'first_author',
                                             'author', 'bibcode', 'articles', 'volume',
@@ -76,6 +84,7 @@ for entry in bib_database.entries:
     print(paper.articles, [p.bibcode for p in paper.articles], [p.adsurl for p in paper.articles if hasattr(p,'adsurl')])
     if len(paper.articles) == 0:
         print("ERROR: Skipped {0}".format(entry['title']))
+        raise
         continue
     print("first article", paper.articles[0],)
     assert len(paper.articles) == 1
