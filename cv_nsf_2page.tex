@@ -1,9 +1,18 @@
 \input{preface}
+\usepackage{multibbl}
+%\newcites{biba,bibb}{Bib A, Bib B}
+\newbibliography{biba}
+\newbibliography{bibb}
+
+%\renewcommand{\refname}{Refereed Publications closely related to proposal}
+%as of \today\\
+%\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
 
 \begin{document}
 
 \begin{minipage}{\textwidth}
-\noindent {\large \textbf{Biographical Sketch}}
+
+\noindent {\Large \textbf{Biographical Sketch}}
 
 \input{personal}
 
@@ -24,29 +33,64 @@
 
 
 %\input{honorsawards}
+%\vfill  
+%\nopagebreak
+
+%\section*{Publications (closely related): }
+%\nocite{Ginsburg2019a}
+\nocite{biba}{Ginsburg2018a}
+\nocite{biba}{Ginsburg2018b}
+\nocite{biba}{Ginsburg2017a}
+\nocite{biba}{Ginsburg2016a}
+\nocite{biba}{Ginsburg2016b}
+
+\nocite{bibb}{Ginsburg2013b}
+\nocite{bibb}{Ginsburg2012a}
+\nocite{bibb}{Ginsburg2019a}
+\nocite{bibb}{Ginsburg2019b}
+\nocite{bibb}{Ginsburg2019d}
+
+\begin{footnotesize}
+\bibliographystyle{biba}{apj_revchron}
+\bibliographystyle{bibb}{apj_revchron}
+%\bibliographystyle{apj_revchron}
+%\bibliographystyle{nature}
+\bibliography{biba}{cv_cites}{Products \& Publications (closely related):}
+%\bibliography{cv_cites}
+
+\end{footnotesize}
+\end{minipage}
+\begin{minipage}{\textwidth}
+
+\begin{footnotesize}
+\bibliography{bibb}{cv_cites}{Products \& Publications}
+\end{footnotesize}
+
 \vfill  
 \nopagebreak
 
-\newpage
-\section*{Publications (closely related): }
-\nocite{Ginsburg2019a}
-\nocite{Ginsburg2018a}
-\nocite{Ginsburg2017a}
-\nocite{Ginsburg2016a}
-\nocite{Ginsburg2015a}
-\begin{footnotesize}
-\bibliographystyle{apj_revchron}
-%\bibliographystyle{nature}
-\bibliography{cv_cites}
-\end{footnotesize}
+\noindent{\large \textbf{Synergistic Activities:}}
+\begin{enumerate}
+    \item Proposal reviewer for NASA ADP grant program, ALMA and VLA
+        science review panels
+    \item Referee for 
+             \textit{Science},
+             \textit{Nature},
+             \textit{Astrophysical Journal},
+             \textit{Astronomy \& Astrophysics},
+             \textit{Monthly Notices of the Royal Astronomical Society},
+             \textit{Proceedings of the Astronomical Society of Japan}, and
+             \textit{Revista Mexicana de Astronom{\'i}a y Astrof{\'i}sica}
+
+\end{enumerate}
 
 
 %\input{pubssummary}
 \end{minipage}
 
 
-\begin{minipage}{\textwidth}
-\end{minipage}
+%\begin{minipage}{\textwidth}
+%\end{minipage}
 % \input{academicadvising}
 % 
 % \vfill  

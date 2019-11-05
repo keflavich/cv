@@ -62,11 +62,19 @@ cv_nsfstyle: clean
 	#${BIBTEX} cv_nsfstyle
 	#${PDFLATEX} cv_nsfstyle.tex
 
+
+
 cv_nsf_2page:
+	rm biba.*
+	rm bibb.*
 	${PDFLATEX} cv_nsf_2page.tex
-	${BIBTEX} cv_nsf_2page
+	#${BIBTEX} cv_nsf_2page
+	${BIBTEX} biba
+	${BIBTEX} bibb
 	${PDFLATEX} cv_nsf_2page.tex
-	${BIBTEX} cv_nsf_2page
+	#${BIBTEX} cv_nsf_2page
+	${BIBTEX} biba
+	${BIBTEX} bibb
 	${PDFLATEX} cv_nsf_2page.tex
 
 cv_erc:
