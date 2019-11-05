@@ -37,8 +37,9 @@
 \def\oldbibitem{} \let\oldbibitem=\bibitem
 \def\bibitem{\stepcounter{citnum}\oldbibitem}
 
-\input{ncites}
+%\input{ncites}
+\input{hindex}
 
 \renewcommand{\refname}{Refereed Publications as of \today\\
-16 first author, \total{citnum} total, with \ncitestotal\ citations:}
+\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
 

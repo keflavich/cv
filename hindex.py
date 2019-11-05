@@ -25,6 +25,9 @@ mypapers.execute()
 
 print("Found {0} papers matching Ginsburg, A".format(len(mypapers.articles)))
 
+ncites_total = sum([art.citation_count for art in ProgressBar(mypapers.articles)
+                    if art.property is not None])
+
 #allpapers = [art for art in ProgressBar(mypapers.articles)
 #             if ('astronomy' in art.database) and
 #             (int(art.year) > 2005)]
@@ -63,6 +66,9 @@ citedict = {"{3}: {0}, {1}{2}".format(art.title[0],
             art.citation_count for art in papers}
 citelist = sorted(citedict, key=lambda x: citedict[x])
 
+first_author = {key:val for key,val in citedict.items()
+                if 'Ginsburg' in key}
+
 print("Computed H-index {0}".format(h_index))
 print()
 print("Titles contributing to H-index: ")
@@ -70,10 +76,14 @@ print("\n".join([description for description,citation_count in citedict.items() 
 
 
 with open('hindex.tex', 'w') as fh:
-    fh.write("\\newcommand{{\\nrefereed}}{{{0}}}\n".format(len(papers)))
-    fh.write("\\newcommand{{\\ntotalpapers}}{{{0}}}\n".format(len(mypapers.articles)))
-    fh.write("\\newcommand{{\\ncites}}{{{0}}}\n".format(sum(citations)))
-    fh.write("\\newcommand{{\\hindex}}{{{0}}}\n".format(h_index))
+    fh.write("\\usepackage{xspace}\n")
+    fh.write("\\newcommand{{\\nrefereed}}{{{0}\\xspace}}\n".format(len(papers)))
+    fh.write("\\newcommand{{\\ntotalpapers}}{{{0}\\xspace}}\n".format(len(mypapers.articles)))
+    fh.write("\\newcommand{{\\ncites}}{{{0}\\xspace}} % refereed\n".format(sum(citations)))
+    fh.write("\\newcommand{{\\ncitestotal}}{{{0}\\xspace}}\n".format(ncites_total))
+    fh.write("\\newcommand{{\\hindex}}{{{0}\\xspace}}\n".format(h_index))
+    fh.write("\\newcommand{{\\nfirst}}{{{0}\\xspace}}\n".format(len(first_author)))
+    fh.write("\\newcommand{{\\ncitesfirst}}{{{0}\\xspace}}\n".format(sum(first_author.values())))
 
 
 
@@ -94,7 +104,7 @@ for entry in bib_database.entries:
         print("Multiple matches for {0} among downloaded papers".format(entry.get('title')))
     else:
         matches[bibcode] = match[0]
-        
+
 print()
 print("ADS search matches (blank means good):")
 

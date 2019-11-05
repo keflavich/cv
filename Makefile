@@ -62,6 +62,13 @@ cv_nsfstyle: clean
 	#${BIBTEX} cv_nsfstyle
 	#${PDFLATEX} cv_nsfstyle.tex
 
+cv_nsf_2page:
+	${PDFLATEX} cv_nsf_2page.tex
+	${BIBTEX} cv_nsf_2page
+	${PDFLATEX} cv_nsf_2page.tex
+	${BIBTEX} cv_nsf_2page
+	${PDFLATEX} cv_nsf_2page.tex
+
 cv_erc:
 	${PDFLATEX} cv_erc.tex
 	${BIBTEX} cv_erc
