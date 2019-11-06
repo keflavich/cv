@@ -1,4 +1,47 @@
-\input{preface}
+\documentclass{article}
+\usepackage{url}
+\usepackage{pbox}
+\usepackage{hyperref}
+%\usepackage[utf8]{inputenc}
+\usepackage{listliketab}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{natbib}  % Requires natbib.sty, available from http://ads.harvard.edu/pubs/bibtex/astronat/
+%\usepackage[sorting=ydnt]{biblatex}
+%\setlength{\bibsep}{0pt}
+\citestyle{aa}  % (Author YYYY) references instead of (Author, YYYY)
+\newcommand\apj{{ApJ}}%
+\newcommand\apjl{{ApJ}}%
+\newcommand\aj{{AJ}}%
+\newcommand\aap{{A\&A}}%
+\newcommand\apss{{Ap\&SS}}%
+\newcommand\araa{{ARA\&A}}%
+\newcommand\nat{{Nature}}%
+\newcommand\aapr{{A\&A~Rev.}}%
+\newcommand\mnras{{MNRAS}}%
+\newcommand\apjs{{ApJS}}%
+\newcommand\pasp{{PASP}}%
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{}{}
+\pagestyle{empty} % no page numbers 
+\newcommand{\myname}[1]{\textbf{{\normalsize #1}}}
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\fancyhf{}
+
+
+\usepackage{totcount}
+
+\newtotcounter{citnum} %From the package documentation
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+%\input{ncites}
+\input{hindex}
+
+\renewcommand{\refname}{Refereed Publications as of \today\\
+\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
+
 \usepackage{multibbl}
 %\newcites{biba,bibb}{Bib A, Bib B}
 \newbibliography{biba}
@@ -14,18 +57,45 @@
 
 \noindent {\Large \textbf{Biographical Sketch}}
 
-\input{personal}
+\input{personal_nsf}
 
 \vfill  
 \nopagebreak
 
-\input{education}
+\section*{Professional Preparation: }
+\begin{tabular} {ll}
+    2006~B.S. Astrophysics & Rice University, Houston, Texas \\
+    2009~M.S. Astrophysics & University of Colorado, Boulder, Colorado \\
+    2013~PhD Astrophysics & University of Colorado, Boulder, Colorado \\
+\end{tabular}
+
 
 \vfill  
 \nopagebreak
 
 
-\input{employment}
+\setlength{\extrarowheight}{2pt}
+\section*{Appointments:}
+\begin{listliketab}
+    %\storetstyleof{itemize}
+    \begin{tabular}{lll}
+    2019 -      & Assistant Professor & University of Florida \\
+                                     && Gainesville, Florida \\
+    2016 - 2019 & Jansky Fellow  & National Radio Astronomy Observatory\\
+                 &         & Socorro, New Mexico \\
+    2013 - 2016 & ESO Fellow  & European Southern Observatory\\
+                 &         & Garching, Germany \\
+    2007 - 2013 & Graduate Research Assistant & Center for Astrophysics and Space Astronomy, \\
+              &                             & University of Colorado, Boulder, CO \\
+    2010 - 2013 & Instructor  & Department of Astrophysical and Planetary Sciences, \\
+                           && University of Colorado, Boulder, CO \\
+    2007 - 2011    & Teaching Assistant & Department of Astrophysical and Planetary Sciences, \\
+                                    && University of Colorado, Boulder, CO \\
+    2007 & Research Assistant & Department of Physics and Astronomy, \\
+                                          && University of Denver, Denver, CO \\
+    \end{tabular}
+\end{listliketab}
+
 
 %\input{areasofresearch}
 \vfill  
@@ -71,17 +141,18 @@
 
 \noindent{\large \textbf{Synergistic Activities:}}
 \begin{enumerate}
-    \item Proposal reviewer for NASA ADP grant program, ALMA and VLA
-        science review panels
-    \item Referee for 
-             \textit{Science},
-             \textit{Nature},
-             \textit{Astrophysical Journal},
-             \textit{Astronomy \& Astrophysics},
-             \textit{Monthly Notices of the Royal Astronomical Society},
-             \textit{Proceedings of the Astronomical Society of Japan}, and
-             \textit{Revista Mexicana de Astronom{\'i}a y Astrof{\'i}sica}
-
+    \item Proposal reviewer for NASA ADP grant program
+    \item Reviewer for the ALMA science review panel
+    \item Referee for \textit{Science}
+    \item Referee for \textit{Nature}
+    \item Referee for the \textit{Astrophysical Journal}
+%             \textit{Nature},
+%             \textit{Astrophysical Journal},
+%             \textit{Astronomy \& Astrophysics},
+%             \textit{Monthly Notices of the Royal Astronomical Society},
+%             \textit{Proceedings of the Astronomical Society of Japan}, and
+%             \textit{Revista Mexicana de Astronom{\'i}a y Astrof{\'i}sica}
+%
 \end{enumerate}
 
 
