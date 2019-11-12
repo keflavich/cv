@@ -1,10 +1,12 @@
-\documentclass{article}
+\documentclass[12pt]{article}
+\usepackage[margin=1.0in,left=1.0in,right=1.5in]{geometry}
 \usepackage{url}
 \usepackage{pbox}
 \usepackage{hyperref}
 %\usepackage[utf8]{inputenc}
 \usepackage{listliketab}
-\usepackage[margin=1.0in]{geometry}
+\usepackage{enumitem}
+
 \usepackage{natbib}  % Requires natbib.sty, available from http://ads.harvard.edu/pubs/bibtex/astronat/
 %\usepackage[sorting=ydnt]{biblatex}
 %\setlength{\bibsep}{0pt}
@@ -53,14 +55,14 @@
 
 \begin{document}
 
-\begin{minipage}{\textwidth}
+%\begin{minipage}{\textwidth}
 
 \noindent {\Large \textbf{Biographical Sketch}}
 
 \input{personal_nsf}
 
-\vfill  
-\nopagebreak
+%\vfill  
+%\nopagebreak
 
 \section*{Professional Preparation: }
 \begin{tabular} {ll}
@@ -70,36 +72,38 @@
 \end{tabular}
 
 
-\vfill  
-\nopagebreak
+%%\vfill  
+%\nopagebreak
 
 
 \setlength{\extrarowheight}{2pt}
 \section*{Appointments:}
 \begin{listliketab}
     %\storetstyleof{itemize}
-    \begin{tabular}{lll}
+    \begin{tabular}{p{0.7in}p{1.6in}p{5in}}
     2019 -      & Assistant Professor & University of Florida \\
                                      && Gainesville, Florida \\
     2016 - 2019 & Jansky Fellow  & National Radio Astronomy Observatory\\
                  &         & Socorro, New Mexico \\
     2013 - 2016 & ESO Fellow  & European Southern Observatory\\
                  &         & Garching, Germany \\
-    2007 - 2013 & Graduate Research Assistant & Center for Astrophysics and Space Astronomy, \\
-              &                             & University of Colorado, Boulder, CO \\
-    2010 - 2013 & Instructor  & Department of Astrophysical and Planetary Sciences, \\
-                           && University of Colorado, Boulder, CO \\
-    2007 - 2011    & Teaching Assistant & Department of Astrophysical and Planetary Sciences, \\
-                                    && University of Colorado, Boulder, CO \\
-    2007 & Research Assistant & Department of Physics and Astronomy, \\
-                                          && University of Denver, Denver, CO \\
+    2007 - 2013 & Graduate Research & Center for Astrophysics and Space Astronomy, \\
+              &   Assistant                & University of Colorado, Boulder, CO \\
+%    2010 - 2013 & Instructor  & Department of Astrophysical and Planetary Sciences, \\
+%                           && University of Colorado, Boulder, CO \\
+%    2007 - 2011    & Teaching Assistant & Department of Astrophysical and Planetary Sciences, \\
+%                                    && University of Colorado, Boulder, CO \\
+%    2007 & Research Assistant & Department of Physics and Astronomy, \\
+%                                          && University of Denver, Denver, CO \\
     \end{tabular}
 \end{listliketab}
 
+%\end{minipage}
+%\begin{minipage}{\textwidth}
 
 %\input{areasofresearch}
-\vfill  
-\nopagebreak
+%\vfill  
+%\nopagebreak
 
 
 %\input{honorsawards}
@@ -120,7 +124,7 @@
 \nocite{bibb}{Ginsburg2019b}
 \nocite{bibb}{Ginsburg2019d}
 
-\begin{footnotesize}
+%\begin{footnotesize}
 \bibliographystyle{biba}{apj_revchron}
 \bibliographystyle{bibb}{apj_revchron}
 %\bibliographystyle{apj_revchron}
@@ -128,36 +132,19 @@
 \bibliography{biba}{cv_cites}{Products \& Publications (closely related):}
 %\bibliography{cv_cites}
 
-\end{footnotesize}
-\end{minipage}
-\begin{minipage}{\textwidth}
+%\end{footnotesize}
 
-\begin{footnotesize}
+%\begin{footnotesize}
 \bibliography{bibb}{cv_cites}{Products \& Publications}
-\end{footnotesize}
+%\end{footnotesize}
 
 \vfill  
 \nopagebreak
 
-\noindent{\large \textbf{Synergistic Activities:}}
-\begin{enumerate}
-    \item Proposal reviewer for NASA ADP grant program
-    \item Reviewer for the ALMA science review panel
-    \item Referee for \textit{Science}
-    \item Referee for \textit{Nature}
-    \item Referee for the \textit{Astrophysical Journal}
-%             \textit{Nature},
-%             \textit{Astrophysical Journal},
-%             \textit{Astronomy \& Astrophysics},
-%             \textit{Monthly Notices of the Royal Astronomical Society},
-%             \textit{Proceedings of the Astronomical Society of Japan}, and
-%             \textit{Revista Mexicana de Astronom{\'i}a y Astrof{\'i}sica}
-%
-\end{enumerate}
 
 
 %\input{pubssummary}
-\end{minipage}
+%\end{minipage}
 
 
 %\begin{minipage}{\textwidth}
@@ -209,6 +196,23 @@
 %    Winter Park Star Safari, July 2011
 
 %\input{overviewprose}
+
+\noindent{\large \textbf{Synergistic Activities:}}
+\begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+%    \item Proposal reviewer for NASA ADP grant program
+    \item Reviewer for the ALMA science review panel
+    \item Member of the \texttt{astropy} core development team
+    \item Software developer for the \texttt{astrodendro} source cataloging package
+    \item Main developer of the \texttt{radio-astro-tools} analysis tool package
+%    \item Referee for several astronomical journals
+%             \textit{Nature},
+%             \textit{Astrophysical Journal},
+%             \textit{Astronomy \& Astrophysics},
+%             \textit{Monthly Notices of the Royal Astronomical Society},
+%             \textit{Proceedings of the Astronomical Society of Japan}, and
+%             \textit{Revista Mexicana de Astronom{\'i}a y Astrof{\'i}sica}
+%
+\end{enumerate}
 
 
 %\newpage
