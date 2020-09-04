@@ -65,6 +65,8 @@ cv_nsfstyle: clean
 
 
 cv_nsf_2page:
+	touch biba.blah
+	touch bibb.blah
 	rm biba.*
 	rm bibb.*
 	${PDFLATEX} cv_nsf_2page.tex
