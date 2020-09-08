@@ -1,0 +1,248 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1.0in,left=1.0in,right=1.5in]{geometry}
+\usepackage{url}
+\usepackage{pbox}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listliketab}
+\usepackage{enumitem}
+
+%\usepackage{natbib}  % Requires natbib.sty, available from http://ads.harvard.edu/pubs/bibtex/astronat/
+
+\usepackage[numbers]{natbib}
+
+%\usepackage[square,sort,comma,numbers]{natbib}
+%\usepackage[sorting=ydnt]{biblatex}
+%\setlength{\bibsep}{0pt}
+\citestyle{aa}  % (Author YYYY) references instead of (Author, YYYY)
+\newcommand\apj{{ApJ}}%
+\newcommand\apjl{{ApJ}}%
+\newcommand\aj{{AJ}}%
+\newcommand\aap{{A\&A}}%
+\newcommand\apss{{Ap\&SS}}%
+\newcommand\araa{{ARA\&A}}%
+\newcommand\nat{{Nature}}%
+\newcommand\aapr{{A\&A~Rev.}}%
+\newcommand\mnras{{MNRAS}}%
+\newcommand\apjs{{ApJS}}%
+\newcommand\pasp{{PASP}}%
+\newcommand\baas{{BAAS}}%
+\newcommand\ssr{{SSR}}%
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{}{}
+\pagestyle{empty} % no page numbers 
+\newcommand{\myname}[1]{\textbf{{\normalsize #1}}}
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\fancyhf{}
+
+
+\usepackage{totcount}
+
+\newtotcounter{citnum} %From the package documentation
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+%\input{ncites}
+\input{hindex}
+
+\renewcommand{\refname}{Refereed Publications as of \today\\
+\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
+
+\usepackage{multibbl}
+%\newcites{biba,bibb}{Bib A, Bib B}
+\newbibliography{biba}
+\newbibliography{bibb}
+
+%\renewcommand{\refname}{Refereed Publications closely related to proposal}
+%as of \today\\
+%\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
+
+\begin{document}
+
+%\begin{minipage}{\textwidth}
+
+\noindent {\Large \textbf{Biographical Sketch}}
+
+\input{personal_nsf}
+
+%\vfill  
+%\nopagebreak
+
+\section*{Professional Preparation: }
+\begin{tabular} {ll}
+    2006~B.S. Astrophysics & Rice University, Houston, Texas \\
+    2009~M.S. Astrophysics & University of Colorado, Boulder, Colorado \\
+    2013~PhD Astrophysics & University of Colorado, Boulder, Colorado \\
+\end{tabular}
+
+
+%%\vfill  
+%\nopagebreak
+
+
+\setlength{\extrarowheight}{2pt}
+\section*{Appointments:}
+\begin{listliketab}
+    %\storetstyleof{itemize}
+    \begin{tabular}{p{0.7in}p{1.6in}p{5in}}
+    2019 -      & Assistant Professor & University of Florida \\
+                                     && Gainesville, Florida \\
+                                     \smallskip \\
+    2016 -  & Jansky Fellow  & National Radio Astronomy Observatory\\
+         2019   &         & Socorro, New Mexico \\
+                                     \smallskip \\
+    2013 -  & ESO Fellow  & European Southern Observatory\\
+        2016    &         & Garching, Germany \\
+                                     \smallskip \\
+    2007 -  & Graduate Research & Center for Astrophysics and Space Astronomy, \\
+    2013    &   Assistant                & University of Colorado, Boulder, CO \\
+%    2010 - 2013 & Instructor  & Department of Astrophysical and Planetary Sciences, \\
+%                           && University of Colorado, Boulder, CO \\
+%    2007 - 2011    & Teaching Assistant & Department of Astrophysical and Planetary Sciences, \\
+%                                    && University of Colorado, Boulder, CO \\
+%    2007 & Research Assistant & Department of Physics and Astronomy, \\
+%                                          && University of Denver, Denver, CO \\
+    \end{tabular}
+\end{listliketab}
+
+%\end{minipage}
+%\begin{minipage}{\textwidth}
+
+%\input{areasofresearch}
+%\vfill  
+%\nopagebreak
+
+
+%\input{honorsawards}
+%\vfill  
+%\nopagebreak
+
+
+\section*{Science, Technical, and Management performance on prior research efforts}
+PI Ginsburg has led the data reduction efforts for several large programs, including
+the Bolocam and MUSTANG Galactic Plane Surveys.  He is co-PI of the ALMA Large Program
+ALMA-IMF, which aims to measure the core mass function in the most actively star-forming
+parts of our Galaxy.
+He is PI of NSF Grant 2008101, ``How are stellar masses set? Measurements of the pre-IMF with ALMA''
+and NRAO Development Study ``Linking CASA to the astropy ecosystem".
+
+
+%\section*{Publications (closely related): }
+%\nocite{Ginsburg2019a}
+\nocite{biba}{Ginsburg2020}
+\nocite{biba}{Ginsburg2019a}
+\nocite{biba}{Ginsburg2019b}
+\nocite{biba}{Ginsburg2019d}
+\nocite{biba}{Ginsburg2018a}
+\nocite{biba}{Ginsburg2018b}
+\nocite{biba}{Ginsburg2017a}
+\nocite{biba}{Ginsburg2016a}
+\nocite{biba}{Ginsburg2016b}
+\nocite{biba}{Ginsburg2013b}
+\nocite{biba}{Ginsburg2013a}
+\nocite{biba}{Ginsburg2012a}
+
+%\begin{footnotesize}
+\bibliographystyle{biba}{apj_revchron}
+%\bibliographystyle{bibb}{apj_revchron}
+%\bibliographystyle{apj_revchron}
+%\bibliographystyle{nature}
+%\bibliography{biba}{cv_cites}{Products \& Publications (closely related):}
+%\bibliography{cv_cites}
+
+%\end{footnotesize}
+
+%\begin{footnotesize}
+\bibliography{biba}{cv}{Products \& Publications}
+%\end{footnotesize}
+
+\vfill  
+\nopagebreak
+
+
+
+%\input{pubssummary}
+%\end{minipage}
+
+
+%\begin{minipage}{\textwidth}
+%\end{minipage}
+% \input{academicadvising}
+% 
+% \vfill  
+% 
+% \input{teaching}
+% 
+% \vfill  
+% 
+% \input{conferencesorganized}
+% 
+% \vfill  
+% 
+% %\input{conferences}
+% 
+% % \section*{Selected Talks:}
+% % \begin{tabular}{cp{1.8in}cp{3.5in}}
+% %     \textbullet & ESO Lunch Talk & 2013 & Examining Massive Cluster Formation with H2CO in W51 \\
+% %     \textbullet & MPIfR Lunch Talk & 2013 & Surveying Star Formation in the Galactic Plane  \\
+% %     \textbullet & CfA Lunch Talk & 2013 & Surveying Star Formation in the Galactic Plane  \\
+% % \end{tabular}
+% 
+% %\input{observing}
+% %\input{otherobserving}
+% 
+% %\input{software}
+% 
+% \input{service}
+% 
+% \end{minipage}
+
+%\input{training}
+
+
+
+%\section*{Outreach:}
+%    Judge for Denver Metro Science Fair, 2/27/2008
+%    Volunteer for middle school science day at the University of Denver, May 2007
+%    Volunteer for University of Colorado Astronomy Day, 2008-2011
+%    Volunteer for Sommers-Bausch Observatory Open Houses, 2007-
+%    Vail Nature Center presentation 7/19/2008
+%    Judge at Boulder Country Day science fair 12/10/2008
+%    Judge at Centennial Middle School science fair 1/30/2009
+%    <a href="outreach.htm"> Public presentations at REI September 2008, 2009</a>
+%    Presentation to Boulder Astronomical Society 1/16/2010
+%    Winter Park Star Safari, July 2011
+
+%\input{overviewprose}
+
+\noindent{\large \textbf{Synergistic Activities:}}
+\begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+%    \item Proposal reviewer for NASA ADP grant program
+    \item Reviewer for the ALMA science review panel
+    \item Member of the \texttt{astropy} core development team
+    \item Software developer for the \texttt{astrodendro} source cataloging package
+    \item Main developer of the \texttt{radio-astro-tools} analysis tool package
+%    \item Referee for several astronomical journals
+%             \textit{Nature},
+%             \textit{Astrophysical Journal},
+%             \textit{Astronomy \& Astrophysics},
+%             \textit{Monthly Notices of the Royal Astronomical Society},
+%             \textit{Proceedings of the Astronomical Society of Japan}, and
+%             \textit{Revista Mexicana de Astronom{\'i}a y Astrof{\'i}sica}
+%
+\end{enumerate}
+
+
+%\newpage
+%\nocite{*}
+%%\section*{Publications: }
+%\begin{footnotesize}
+%\bibliographystyle{apj_revchron}
+%%\bibliographystyle{nature}
+%\bibliography{cv}
+%\end{footnotesize}
+
+
+\end{document}
