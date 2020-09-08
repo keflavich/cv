@@ -64,7 +64,7 @@ cv_nsfstyle: clean
 
 
 
-cv_nsf_2page:
+cv_nsf_2page: pubs
 	touch biba.blah
 	touch bibb.blah
 	rm biba.*
