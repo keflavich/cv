@@ -63,7 +63,7 @@ cv_nsfstyle: clean
 	#${PDFLATEX} cv_nsfstyle.tex
 
 
-cv_nasa_2page: pubs
+cv_nasa_2page:
 	touch biba.blah
 	touch bibb.blah
 	rm biba.*
@@ -71,12 +71,13 @@ cv_nasa_2page: pubs
 	${PDFLATEX} cv_nasa_2page.tex
 	#${BIBTEX} cv_nasa_2page
 	${BIBTEX} biba
-	${BIBTEX} bibb
+	#${BIBTEX} bibb
 	${PDFLATEX} cv_nasa_2page.tex
 	#${BIBTEX} cv_nasa_2page
 	${BIBTEX} biba
-	${BIBTEX} bibb
+	#${BIBTEX} bibb
 	${PDFLATEX} cv_nasa_2page.tex
+	${PDFLATEX} cv_nasa_2page
 
 cv_nsf_2page: pubs
 	touch biba.blah

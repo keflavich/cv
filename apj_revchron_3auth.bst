@@ -392,38 +392,47 @@ MACRO {tcs} {"Theoretical Comput. Sci."}
 
 INTEGERS { nameptr namesleft numnames }
 
+% "et al" formatting section
 FUNCTION {format.names}
 { 's :=
   #1 'nameptr :=
   s num.names$ 'numnames :=
-  numnames 'namesleft :=
-  numnames #6 >
-    { s #1 "~{vv~}{ll}{, jj}{, f.}" format.name$ " {et~al.}" * }
-    {
-    { namesleft #0 > }
-    { s nameptr
-      "{vv~}{ll}{, jj}{, f.}" format.name$
-    't :=
-      nameptr #1 >
-        {
-          namesleft #1 >
-            { ", " * t * }
-            {
-              numnames #2 >
-                { "," * }
-                'skip$
-              if$
-              s nameptr "{ll}" format.name$ duplicate$ "others" =
-                { 't := }
-                { pop$ }
-              if$
-              t "others" =
-                {
-                  " {et~al.}" *
-                }
-                { " \& " * t * }
-              if$
+  numnames #2 > 
+  { #3 'namesleft := }
+  { numnames 'namesleft := }
+  if$
+        { namesleft #0 > }
+        { s nameptr "{vv~}{ll}{, jj}{, f.}" format.name$
+        't :=
+          nameptr #1 >
+            { namesleft #1 >
+                { ", " * t * }
+                { numnames #2 >
+                    { "," * }
+                    'skip$
+                  if$
+                  % the next 4 lines are stricly always no-op
+                  s nameptr "{ll}" format.name$ duplicate$ "others" =
+                    { 't := }
+                    { pop$ }
+                  if$
+                  t "others" =
+                  { " {et~al.}" * }
+                  { numnames #3 > 
+                      { " " * t * }
+                      { " \& " * t * }
+                      if$ 
+                  }
+                  if$
             }
+          if$
+          namesleft #1 =
+          { numnames #3 >
+              { ", {et~al.}" * }
+              { "" *}
+              if$
+          }
+          { "" * }
           if$
         }
         't
@@ -432,8 +441,6 @@ FUNCTION {format.names}
       namesleft #1 - 'namesleft :=
     }
   while$
-}
-if$
 }
 
 FUNCTION {format.names.ed}
@@ -1046,6 +1053,9 @@ FUNCTION {format.publisher}
 STRINGS {oldname}
 
 FUNCTION {name.or.dash}
+{ 's := s }
+
+FUNCTION {old.name.or.dash}
 { 's :=
    oldname empty$
      { s 'oldname := s }
