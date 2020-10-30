@@ -1299,6 +1299,7 @@ FUNCTION {inproceedings}
   author format.key output            % added
   format.date "year" output.check
   date.block
+  format.title "title" output.check
   bbl.in " " * booktitle format.full.book.spec * output
 %  crossref missing$
 %    { format.in.ed.booktitle "booktitle" output.check
