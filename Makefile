@@ -63,6 +63,22 @@ cv_nsfstyle: clean
 	#${PDFLATEX} cv_nsfstyle.tex
 
 
+cv_nasa_1page:
+	touch biba.blah
+	touch bibb.blah
+	rm biba.*
+	rm bibb.*
+	${PDFLATEX} cv_nasa_1page.tex
+	#${BIBTEX} cv_nasa_1page
+	${BIBTEX} biba
+	#${BIBTEX} bibb
+	${PDFLATEX} cv_nasa_1page.tex
+	#${BIBTEX} cv_nasa_1page
+	${BIBTEX} biba
+	#${BIBTEX} bibb
+	${PDFLATEX} cv_nasa_1page.tex
+	${PDFLATEX} cv_nasa_1page
+
 cv_nasa_2page:
 	touch biba.blah
 	touch bibb.blah
