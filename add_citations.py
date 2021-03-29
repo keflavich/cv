@@ -3,10 +3,12 @@ import bibtexparser
 from get_dev_key import get_dev_key
 
 
+parser = bibtexparser.bparser.BibTexParser(common_strings=True)
+
 ads.config.token = get_dev_key()
 
 with open('cv.bib','r') as fh:
-    bib_database = bibtexparser.load(fh)
+    bib_database = bibtexparser.load(fh, parser=parser)
 
 total_cites = 0
 total_firstauthor_cites = 0

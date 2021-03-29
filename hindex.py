@@ -4,6 +4,8 @@ from astropy.utils.console import ProgressBar
 import bibtexparser
 from get_dev_key import get_dev_key
 
+parser = bibtexparser.bparser.BibTexParser(common_strings=True)
+
 print("hindex")
 print("Today is {0}".format(datetime.datetime.now().strftime("%D")))
 
@@ -89,7 +91,7 @@ with open('hindex.tex', 'w') as fh:
 
 
 with open('cv.bib','r') as fh:
-    bib_database = bibtexparser.load(fh)
+    bib_database = bibtexparser.load(fh, parser=parser)
 
 print()
 print("cv.bib matches: (blank means good)")
@@ -121,6 +123,6 @@ for art in papers:
         print("No match for {0} in cv.bib: {1}".format(art.title, art.bibcode))
     elif len(match) > 1:
         print("Multiple matches for {0} in cv.bib.  doi: {1} bibcode: {2}".format(art.title, art.identifier, bibcode))
-        raise
+        raise ValueError("Multiple matches!")
     else:
         reverse_matches[bibcode] = match[0]
