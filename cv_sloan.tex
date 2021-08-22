@@ -1,0 +1,167 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1.0in,left=1.0in,right=1.5in]{geometry}
+\usepackage{url}
+\usepackage{pbox}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listliketab}
+\usepackage{enumitem}
+
+%\usepackage{natbib}  % Requires natbib.sty, available from http://ads.harvard.edu/pubs/bibtex/astronat/
+
+\usepackage[numbers]{natbib}
+
+%\usepackage[square,sort,comma,numbers]{natbib}
+%\usepackage[sorting=ydnt]{biblatex}
+%\setlength{\bibsep}{0pt}
+%\citestyle{aa}  % (Author YYYY) references instead of (Author, YYYY)
+\newcommand\apj{{ApJ}}%
+\newcommand\apjl{{ApJ}}%
+\newcommand\aj{{AJ}}%
+\newcommand\aap{{A\&A}}%
+\newcommand\apss{{Ap\&SS}}%
+\newcommand\araa{{ARA\&A}}%
+\newcommand\nat{{Nature}}%
+\newcommand\aapr{{A\&A~Rev.}}%
+\newcommand\mnras{{MNRAS}}%
+\newcommand\apjs{{ApJS}}%
+\newcommand\pasp{{PASP}}%
+\newcommand\baas{{BAAS}}%
+\newcommand\ssr{{SSR}}%
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{}{}
+\pagestyle{empty} % no page numbers 
+\newcommand{\myname}[1]{\textbf{{\normalsize #1}}}
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\fancyhf{}
+
+
+\usepackage{totcount}
+
+\newtotcounter{citnum} %From the package documentation
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+%\input{ncites}
+\input{hindex}
+
+\renewcommand{\refname}{Refereed Publications as of \today\\
+\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
+
+\usepackage{multibbl}
+%\newcites{biba,bibb}{Bib A, Bib B}
+\newbibliography{biba}
+\newbibliography{bibb}
+\newbibliography{bibc}
+
+%\renewcommand{\refname}{Refereed Publications closely related to proposal}
+%as of \today\\
+%\nfirst first author, \total{citnum} total, with \ncitestotal\ citations:}
+
+\begin{document}
+
+%\lhead{\thepage}
+%\chead{CV}
+%\rhead{Adam Ginsburg}% \thepage is the command for a page number
+\input{personal}
+  
+\input{education}
+
+
+\input{employment}
+
+\input{areasofresearch}
+
+
+
+%\input{honorsawards}
+
+%\input{academicadvising}
+%
+%\input{teaching}
+%
+%
+%\input{conferences}
+%
+%\input{talks}
+%
+%%\input{overviewprose}
+%
+%\input{software}
+%
+%\input{service}
+%
+%\input{conferencesorganized}
+%
+%\input{training}
+%
+%\input{observing}
+%\input{otherobserving}
+
+
+
+
+
+%\section*{Outreach:}
+%    Judge for Denver Metro Science Fair, 2/27/2008
+%    Volunteer for middle school science day at the University of Denver, May 2007
+%    Volunteer for University of Colorado Astronomy Day, 2008-2011
+%    Volunteer for Sommers-Bausch Observatory Open Houses, 2007-
+%    Vail Nature Center presentation 7/19/2008
+%    Judge at Boulder Country Day science fair 12/10/2008
+%    Judge at Centennial Middle School science fair 1/30/2009
+%    <a href="outreach.htm"> Public presentations at REI September 2008, 2009</a>
+%    Presentation to Boulder Astronomical Society 1/16/2010
+%    Winter Park Star Safari, July 2011
+
+\nocite{biba}{Astropy-Collaboration2013a}
+\nocite{biba}{Astropy-Collaboration2018a}
+\nocite{biba}{2011ApJS..192....4A}
+\nocite{biba}{2010ApJS..188..123R}
+\nocite{biba}{Margutti2014a}
+
+\nocite{bibb}{Ginsburg2016a}
+\nocite{bibb}{Ginsburg2019a}
+\nocite{bibb}{Ginsburg2013b}
+\nocite{bibb}{Ginsburg2012a}
+\nocite{bibb}{Ginsburg2018a}
+
+%\begin{footnotesize}
+\bibliographystyle{biba}{apj_revcite}
+\bibliographystyle{bibb}{apj_revcite}
+%\bibliographystyle{apj_revchron}
+%\bibliographystyle{nature}
+\bibliography{biba}{cv_cites}{Five top-cited papers:}
+%\bibliography{cv_cites}
+
+%\end{footnotesize}
+
+%\begin{footnotesize}
+\bibliography{bibb}{cv_cites}{Five top-cited first-author  papers:}
+%\end{footnotesize}
+
+\vfill  
+\nopagebreak
+
+\newpage
+
+\nocite{bibc}{*}
+\bibliographystyle{bibc}{apj_revchron}
+\bibliography{bibc}{cv_cites}{All Refereed Publications as of \today\\
+\nfirst first author, \nrefereed total, with \ncitestotal\ citations and h-index \hindex\\
+in reverse chronological order:}
+%\section*{Publications: }
+%\begin{footnotesize}
+%\bibliographystyle{nature}
+
+
+
+
+%\end{footnotesize}
+
+%\input{submitted}
+
+
+\end{document}
