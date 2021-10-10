@@ -55,6 +55,14 @@ cv_terse:
 	${BIBTEX} cv_terse
 	${PDFLATEX} cv_terse.tex
 
+cv_nrao:
+	${PDFLATEX} cv_nrao.tex
+	${BIBTEX} cv_nrao
+	${PDFLATEX} cv_nrao.tex
+	${BIBTEX} cv_nrao
+	${PDFLATEX} cv_nrao.tex
+
+
 cv_nsfstyle: clean
 	${PDFLATEX} cv_nsfstyle.tex
 	#${BIBTEX} cv_nsfstyle
