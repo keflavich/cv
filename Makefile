@@ -133,6 +133,25 @@ cv_withrefs:
 	${BIBTEX} cv_withrefs
 	${PDFLATEX} cv_withrefs.tex
 
+cv_sloan:
+	touch biba.blah
+	touch bibb.blah
+	touch bibc.blah
+	rm biba.*
+	rm bibb.*
+	rm bibc.*
+	${PDFLATEX} cv_sloan.tex
+	#${BIBTEX} cv_sloan
+	${BIBTEX} biba
+	${BIBTEX} bibb
+	${BIBTEX} bibc
+	${PDFLATEX} cv_sloan.tex
+	#${BIBTEX} cv_sloan
+	${BIBTEX} biba
+	${BIBTEX} bibb
+	${BIBTEX} bibc
+	${PDFLATEX} cv_sloan.tex
+
 
 clean: 
 	@rm -f *.aux *.bbl *.blg *.dvi *.log *.out *.idv *.lg *.bcf
