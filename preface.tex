@@ -29,7 +29,9 @@
 \newcommand\baas{{BAAS}}%
 \newcommand\ssr{{SSR}}%
 \usepackage{titlesec}
-\titleformat{\section}{\large\bfseries}{\thesection}{}{}
+\newcommand{\hruleafter}[1]{#1\hrule\vspace{-4mm}}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{}{\hruleafter}
 \pagestyle{empty} % no page numbers 
 \newcommand{\myname}[1]{\textbf{{\normalsize #1}}}
 
