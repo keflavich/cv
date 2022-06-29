@@ -36,12 +36,21 @@ for entry in bib_database.entries:
         continue
     #print(paper.articles, paper.articles[0])
     print(pfx, paper.articles[0].bibcode, paper.articles[0].citation_count)
-    assert len(paper.articles) == 1
-    entry['citations'] = "{0}".format(paper.articles[0].citation_count)
+    if len(paper.articles) > 1:
+        arts = [art for art in paper.articles if 'tmp' not in art.bibcode]
+        if len(arts) == 1:
+            art = arts[0]
+        else:
+            for ii in range(len(paper.articles)):
+                print(f"Article {ii} id: {paper.articles[ii].id} author: {paper.articles[ii].author}")
+            raise ValueError("Found multiple articles.")
+    else:
+        art = paper.articles[0]
+    entry['citations'] = "{0}".format(art.citation_count)
 
-    total_cites += paper.articles[0].citation_count
-    if "ginsburg" in paper.articles[0].author[0].lower():
-        total_firstauthor_cites += paper.articles[0].citation_count
+    total_cites += art.citation_count
+    if "ginsburg" in art.author[0].lower():
+        total_firstauthor_cites += art.citation_count
 
 with open('cv_cites.bib','w') as fh:
     bibtexparser.dump(bib_database, fh)
