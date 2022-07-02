@@ -156,14 +156,17 @@ cv_TandP:
 	touch biba.blah
 	touch bibb.blah
 	touch bibc.blah
+	touch bibd.blah
 	rm biba.*
 	rm bibb.*
 	rm bibc.*
+	rm bibd.*
 	${PDFLATEX} cv_TandP.tex
 	#${BIBTEX} cv_sloan
 	${BIBTEX} biba
 	${BIBTEX} bibb
 	${BIBTEX} bibc
+	${BIBTEX} bibd
 	${PDFLATEX} cv_TandP.tex
 	#${BIBTEX} cv_sloan
 	#${BIBTEX} biba
