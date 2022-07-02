@@ -1,0 +1,18 @@
+\input{preface}
+
+\renewcommand{\refname}{Refereed Publications as of \today\\
+\nfirst first author, \nrefereed total, with \ncitestotal\ citations and h-index \hindex.\\
+First author publications:}
+\begin{document}
+
+\newpage
+\nocite{*}
+%\section*{Publications: }
+\begin{footnotesize}
+\bibliographystyle{apj_revchron}
+%\bibliographystyle{nature}
+\bibliography{cv_firstauthor_cites}
+\end{footnotesize}
+
+
+\end{document}
