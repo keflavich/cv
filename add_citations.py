@@ -10,6 +10,9 @@ ads.config.token = get_dev_key()
 with open('cv.bib','r') as fh:
     bib_database = bibtexparser.load(fh, parser=parser)
 
+firstauthor_entries = []
+nonfirstauthor_entries = []
+
 total_cites = 0
 total_firstauthor_cites = 0
 
@@ -33,6 +36,7 @@ for entry in bib_database.entries:
 
     if len(paper.articles) == 0:
         print("ERROR: Skipping {0} because it wasn't found.".format(entry['title']))
+        raise
         continue
     #print(paper.articles, paper.articles[0])
     print(pfx, paper.articles[0].bibcode, paper.articles[0].citation_count)
@@ -51,9 +55,23 @@ for entry in bib_database.entries:
     total_cites += art.citation_count
     if "ginsburg" in art.author[0].lower():
         total_firstauthor_cites += art.citation_count
+        firstauthor_entries.append(entry)
+    else:
+        nonfirstauthor_entries.append(entry)
+
+firstauthor_database = bibtexparser.bibdatabase.BibDatabase()
+firstauthor_database.entries = firstauthor_entries
+nonfirstauthor_database = bibtexparser.bibdatabase.BibDatabase()
+nonfirstauthor_database.entries = nonfirstauthor_entries
 
 with open('cv_cites.bib','w') as fh:
     bibtexparser.dump(bib_database, fh)
+
+with open('cv_firstauthor_cites.bib','w') as fh:
+    bibtexparser.dump(firstauthor_database, fh)
+
+with open('cv_nonfirstauthor_cites.bib','w') as fh:
+    bibtexparser.dump(nonfirstauthor_database, fh)
 
 with open('ncites.tex', 'w') as fh:
     fh.write("\input{hindex.tex}")
