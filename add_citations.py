@@ -52,6 +52,12 @@ for entry in bib_database.entries:
         art = paper.articles[0]
     entry['citations'] = "{0}".format(art.citation_count)
 
+    # special case for pyspeckit
+    if 'doi' in entry and entry['doi'] == "10.3847/1538-3881/ac695a":
+        ps_paper = ads.SearchQuery(bibcode="2011ascl.soft09001G", fl=['citation_count', 'author', 'year', 'id', 'bibcode'])
+        ps_paper.execute()
+        entry['citations'] = "{0}".format(ps_paper.articles[0].citation_count)
+
     total_cites += art.citation_count
     if "ginsburg" in art.author[0].lower():
         total_firstauthor_cites += art.citation_count

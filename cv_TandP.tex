@@ -1,4 +1,64 @@
-\input{preface}
+\documentclass{article}
+\usepackage{url}
+\usepackage{pbox}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listliketab}
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{color, colortbl}
+
+%\usepackage[margin=1.0in]{geometry}
+\usepackage[left=2cm,top=2cm,bottom=1.5cm,right=2cm,includefoot]{geometry}
+%\usepackage{natbib}  % Requires natbib.sty, available from http://ads.harvard.edu/pubs/bibtex/astronat/
+\usepackage[]{natbib}
+%\usepackage[sorting=ydnt]{biblatex}
+%\setlength{\bibsep}{0pt}
+%\citestyle{aa}  % (Author YYYY) references instead of (Author, YYYY)
+\newcommand\apj{{ApJ}}%
+\newcommand\apjl{{ApJ}}%
+\newcommand\aj{{AJ}}%
+\newcommand\aap{{A\&A}}%
+\newcommand\apss{{Ap\&SS}}%
+\newcommand\araa{{ARA\&A}}%
+\newcommand\nat{{Nature}}%
+\newcommand\aapr{{A\&A~Rev.}}%
+\newcommand\mnras{{MNRAS}}%
+\newcommand\apjs{{ApJS}}%
+\newcommand\pasp{{PASP}}%
+\newcommand\baas{{BAAS}}%
+\newcommand\ssr{{SSR}}%
+\usepackage{titlesec}
+\newcommand{\hruleafter}[1]{#1\hrule\vspace{-4mm}}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{}{\hruleafter}
+\pagestyle{empty} % no page numbers 
+\newcommand{\myname}[1]{\textbf{{\normalsize #1}}}
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\fancyhf{}
+
+
+\usepackage{totcount}
+
+\newtotcounter{citnum} %From the package documentation
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+%\input{ncites}
+\input{hindex}
+
+\renewcommand{\refname}{Refereed Publications as of \today\\
+\nfirst first author, \nrefereed total, with \ncitestotal\ citations and h-index \hindex:}
+
+
+\usepackage{multibbl}
+%\newcites{biba,bibb}{Bib A, Bib B}
+\newbibliography{biba}
+\newbibliography{bibb}
+\newbibliography{bibc}
+
 \begin{document}
 %\lhead{\thepage}
 %\chead{CV}
@@ -76,4 +136,62 @@
 %\input{submitted}
 
 
+
+
+\nocite{biba}{2022A&A...662A...9G}
+\nocite{biba}{2022AJ....163..291G}
+\nocite{biba}{Ginsburg2020}
+\nocite{biba}{Ginsburg2019a}
+\nocite{biba}{Ginsburg2019b}
+\nocite{biba}{Ginsburg2019c}
+\nocite{biba}{Ginsburg2019d}
+\nocite{biba}{Ginsburg2018a}
+\nocite{biba}{Ginsburg2018b}
+\nocite{biba}{Ginsburg2018c}
+\nocite{biba}{Ginsburg2017a}
+\nocite{biba}{Ginsburg2016a}
+\nocite{biba}{Ginsburg2016b}
+\nocite{biba}{Ginsburg2015a}
+\nocite{biba}{Ginsburg2015d}
+\nocite{biba}{Ginsburg2013b}
+\nocite{biba}{Ginsburg2013c}
+\nocite{biba}{Ginsburg2012a}
+\nocite{biba}{2011MNRAS.418.2121G}
+\nocite{biba}{2011ApJ...736..149G}
+\nocite{biba}{Ginsburg2009a}
+
+\nocite{bibb}{2021ApJ...923..221O}
+
+%\begin{footnotesize}
+\bibliographystyle{biba}{apj_revcite}
+\bibliographystyle{bibb}{apj_revcite}
+%\bibliographystyle{apj_revchron}
+%\bibliographystyle{nature}
+\bibliography{biba}{cv_cites}{First-Author Papers (sorted by citation count):}
+%\bibliography{cv_cites}
+
+%\end{footnotesize}
+
+%\begin{footnotesize}
+\bibliography{bibb}{cv_cites}{Student first-author papers:}
+%\end{footnotesize}
+
+\vfill  
+\nopagebreak
+
+\newpage
+
+\nocite{bibc}{*}
+\bibliographystyle{bibc}{apj_revchron}
+\bibliography{bibc}{cv_cites}{All Refereed Publications as of \today\\
+\nfirst first author, \nrefereed total, with \ncitestotal\ citations and h-index \hindex\\
+in reverse chronological order:}
+%\section*{Publications: }
+%\begin{footnotesize}
+%\bibliographystyle{nature}
+
+
+
+
+%\end{footnotesize}
 \end{document}

@@ -1050,7 +1050,8 @@ FUNCTION {name.or.dash}
    oldname empty$
      { s 'oldname := s }
      { s oldname =
-         { "---" }
+         %{ "---" }
+         { s 'oldname := s }
          { s 'oldname := s }
        if$
      }
