@@ -88,6 +88,23 @@ cv_nasa_1page:
 	${PDFLATEX} cv_nasa_1page
 	gs -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=pdfwrite -dFirstPage=1 -dLastPage=1 -sOutputFile=cv_nasa_1page_b.pdf cv_nasa_1page.pdf
 
+
+cv_1page:
+	touch biba.blah
+	touch bibb.blah
+	rm biba.*
+	rm bibb.*
+	${PDFLATEX} cv_1page.tex
+	#${BIBTEX} cv_1page
+	${BIBTEX} biba
+	#${BIBTEX} bibb
+	${PDFLATEX} cv_1page.tex
+	#${BIBTEX} cv_1page
+	${BIBTEX} biba
+	#${BIBTEX} bibb
+	${PDFLATEX} cv_1page.tex
+	${PDFLATEX} cv_1page
+
 cv_nasa_2page:
 	touch biba.blah
 	touch bibb.blah
