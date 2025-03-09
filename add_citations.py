@@ -80,6 +80,6 @@ with open('cv_nonfirstauthor_cites.bib','w') as fh:
     bibtexparser.dump(nonfirstauthor_database, fh)
 
 with open('ncites.tex', 'w') as fh:
-    fh.write("\input{hindex.tex}")
+    fh.write(r"\input{hindex.tex}")
     #fh.write("\\newcommand{{\\ncitestotal}}{{{0}}}\n".format(total_cites))
     #fh.write("\\newcommand{{\\nfirstcitestotal}}{{{0}}}\n".format(total_firstauthor_cites))
