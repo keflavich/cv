@@ -11,14 +11,15 @@ with open('cv.bib','r') as fh:
     bib_database = parser.parse(txt)
 
 
-students = ('Jeff', 'Budaiev', 'Bulatek', 'Richardson', 'Yoo', 'Gramze')
+students = ('Jeff', 'Budaiev', 'Bulatek', 'Richardson', 'Yoo', 'Gramze', 'Otter')
 for entry in bib_database.entries:
 
     if "{Ginsburg}" in entry['author'] and 'myname' not in entry['author']:
         entry['author'] = entry['author'].replace("{Ginsburg}", "{\\myname{Ginsburg}}")
     if any(x in entry['author'] for x in students):
         for student in students:
-            entry['author'] = entry['author'].replace(f"{{{student}}}", f"{{\\student{{{student}}}}}")
+            if 'student' not in entry['author']:
+                entry['author'] = entry['author'].replace(f"{{{student}}}", f"{{\\student{{{student}}}}}")
 
 
 
