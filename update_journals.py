@@ -1,8 +1,20 @@
-import ads
+import requests
 import bibtexparser
 from get_dev_key import get_dev_key
 
-ads.config.token = get_dev_key()
+# ADS API configuration
+ADS_API_BASE_URL = "https://api.adsabs.harvard.edu/v1"
+ADS_API_TOKEN = get_dev_key()
+
+def get_rate_limits(response_headers):
+    """
+    Extract rate limit information from response headers
+    """
+    return {
+        'limit': response_headers.get('X-RateLimit-Limit', '0'),
+        'remaining': response_headers.get('X-RateLimit-Remaining', '0'),
+        'reset': response_headers.get('X-RateLimit-Reset', '0')
+    }
 
 parser = bibtexparser.bparser.BibTexParser(common_strings=True)
 
@@ -27,77 +39,79 @@ for entry in bib_database.entries:
         print("Attempting to determine Journal for {0}: {1}".format(entry['doi'],
                                                                     entry['ID'])
              )
-        paper = ads.SearchQuery(doi=entry['doi'], fl=['bibtex', 'journal',
-                                                      'pages', 'eid', 'month',
-                                                      'year', 'adsurl',
-                                                      'first_author', 'author',
-                                                      'bibcode', 'articles',
-                                                      'volume', 'doi'])
+        query_params = {'q': f'doi:{entry["doi"]}'}
+        fields = ['bibtex', 'journal', 'pages', 'eid', 'month', 'year', 'adsurl',
+                  'first_author', 'author', 'bibcode', 'volume', 'doi']
     elif 'journal' in entry:
         if 'doi' not in entry:
             if 'eprint' in entry:
                 print("Found eprint for {0}".format(entry['eprint']))
                 arxivid = entry['eprint'].split("v")[0]
-                paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
-                                                           'pages', 'eid', 'month',
-                                                           'articles', 'year',
-                                                           'first_author', 'author', 'bibcode',
-                                                           'adsurl', 'volume'])
+                query_params = {'q': f'arXiv:{arxivid}'}
+                fields = ['bibtex', 'journal', 'pages', 'eid', 'month', 'year',
+                          'first_author', 'author', 'bibcode', 'adsurl', 'volume']
             elif 'eid' in entry:
                 print("Found eid for {0}".format(entry['eid']))
                 arxivid = entry['eid'].split(":")[1].split("v")[0]
-                paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
-                                                           'pages', 'eid', 'month',
-                                                           'articles', 'year',
-                                                           'first_author', 'author', 'bibcode',
-                                                           'adsurl', 'volume'])
+                query_params = {'q': f'arXiv:{arxivid}'}
+                fields = ['bibtex', 'journal', 'pages', 'eid', 'month', 'year',
+                          'first_author', 'author', 'bibcode', 'adsurl', 'volume']
             elif 'adsurl' in entry:
                 adsurl = entry['adsurl'].split("/")[-1].replace("%26","&") if 'adsurl' in entry else None
                 print("Loading journal from ADS URL {0}".format(adsurl))
-                paper = ads.SearchQuery(bibcode=adsurl,
-                                        fl=['bibtex', 'journal', 'pages', 'eid',
-                                            'month', 'year', 'adsurl', 'first_author',
-                                            'author', 'bibcode', 'articles', 'volume',
-                                            'doi'])
+                query_params = {'q': f'bibcode:{adsurl}'}
+                fields = ['bibtex', 'journal', 'pages', 'eid', 'month', 'year', 'adsurl',
+                          'first_author', 'author', 'bibcode', 'volume', 'doi']
             else:
                 print("Trying to ID article from title {0}".format(entry['title']))
-                paper = ads.SearchQuery(title=entry['title'].strip('{}'),
-                                        fl=['bibtex', 'journal', 'pages', 'eid',
-                                            'month', 'year', 'adsurl', 'first_author',
-                                            'author', 'bibcode', 'articles', 'volume',
-                                            'doi'])
+                query_params = {'q': f'title:"{entry["title"].strip("{}")}"'}
+                fields = ['bibtex', 'journal', 'pages', 'eid', 'month', 'year', 'adsurl',
+                          'first_author', 'author', 'bibcode', 'volume', 'doi']
         else:
             print("Entry {0} is already complete".format(entry['ID']))
             continue
     elif 'eprint' in entry:
         print("Found eprint but no journal for {0}".format(entry['eprint']))
         arxivid = entry['eprint'].split("v")[0]
-        paper = ads.SearchQuery(arXiv=arxivid, fl=['bibtex', 'journal',
-                                                   'pages', 'eid', 'month',
-                                                   'articles', 'year',
-                                                   'first_author', 'author', 'bibcode',
-                                                   'adsurl', 'volume'])
+        query_params = {'q': f'arXiv:{arxivid}'}
+        fields = ['bibtex', 'journal', 'pages', 'eid', 'month', 'year',
+                  'first_author', 'author', 'bibcode', 'adsurl', 'volume']
     else:
         print("Could not search for entry: {0} because there is no journal or doi"
               .format(entry))
         continue
-    paper.execute()
 
-    ratelimits = paper.response.get_ratelimits()
+    # Make API request
+    response = requests.get(f"{ADS_API_BASE_URL}/search/query",
+                          headers={'Authorization': f'Bearer {ADS_API_TOKEN}'},
+                          params={
+                              'fl': ','.join(fields),
+                              'rows': 10,
+                              **query_params
+                          })
+
+    if response.status_code != 200:
+        print(f"ERROR: API request failed with status {response.status_code}: {response.text}")
+        continue
+
+    ratelimits = get_rate_limits(response.headers)
     if int(ratelimits['remaining']) < 1:
         raise ValueError("Rate limit of ADS queries exceeded.")
 
-    print(paper.articles, [p.bibcode for p in paper.articles], [p.adsurl for p in paper.articles if hasattr(p,'adsurl')])
-    if len(paper.articles) == 0:
+    result = response.json()
+    docs = result.get('response', {}).get('docs', [])
+
+    print(docs, [p['bibcode'] for p in docs], [p.get('adsurl', '') for p in docs])
+    if len(docs) == 0:
         print("ERROR: Skipped {0}".format(entry['title']))
         raise
         continue
-    print("first article", paper.articles[0],)
-    assert len(paper.articles) == 1
-    article = paper.articles[0]
+    print("first article", docs[0])
+    assert len(docs) == 1
+    article = docs[0]
     try:
         parser = bibtexparser.bparser.BibTexParser(common_strings=True)
-        entry_bibtex = parser.parse(article.bibtex).entries[0]
+        entry_bibtex = parser.parse(article['bibtex']).entries[0]
     except Exception as ex:
         print("Failed to parse {0} because of {1}"
               .format(entry, ex))
