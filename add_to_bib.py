@@ -260,6 +260,133 @@ for ads_entry in ads_entries:
         if 'alma-imf' in ads_title.lower():
             print(f"DEBUG: No match found - adding as new entry: '{ads_title}'")
 
+def extract_bibcode_from_adsurl(adsurl):
+    """
+    Extract bibcode from ADS URL
+    """
+    if not adsurl:
+        return None
+    return adsurl.split("/")[-1].replace("%26", "&")
+
+def extract_identifiers(entry):
+    """
+    Extract DOI and bibcode from a bibliography entry
+    """
+    doi = entry.get('doi', '').strip()
+    bibcode = None
+
+    # Try to get bibcode from adsurl field
+    if 'adsurl' in entry:
+        bibcode = extract_bibcode_from_adsurl(entry['adsurl'])
+
+    # Also check if there's a direct bibcode field
+    if not bibcode and 'bibcode' in entry:
+        bibcode = entry['bibcode'].strip()
+
+    return doi, bibcode
+
+def merge_entries(entry1, entry2):
+    """
+    Merge two bibliography entries, preferring more complete information
+    """
+    merged = {}
+
+    # Combine all keys from both entries
+    all_keys = set(entry1.keys()) | set(entry2.keys())
+
+    for key in all_keys:
+        val1 = entry1.get(key, '')
+        val2 = entry2.get(key, '')
+
+        # Prefer non-empty values
+        if val1 and not val2:
+            merged[key] = val1
+        elif val2 and not val1:
+            merged[key] = val2
+        elif val1 and val2:
+            # Both have values - prefer longer/more complete one
+            if len(str(val1)) >= len(str(val2)):
+                merged[key] = val1
+            else:
+                merged[key] = val2
+        # If both empty, skip the field
+
+    return merged
+
+def deduplicate_entries(entries, description="entries"):
+    """
+    Remove and merge duplicate entries based on DOI and bibcode
+    """
+    print(f"\n=== DEDUPLICATION: {description.upper()} ===")
+
+    # Track entries by DOI and bibcode
+    doi_map = {}
+    bibcode_map = {}
+    unique_entries = []
+    merged_count = 0
+
+    for entry in entries:
+        doi, bibcode = extract_identifiers(entry)
+
+        # Check for DOI duplicates
+        duplicate_found = False
+        if doi and doi in doi_map:
+            existing_entry = doi_map[doi]
+            print(f"  Merging entries with same DOI: {doi}")
+            print(f"    Entry 1: {existing_entry.get('title', 'No title')[:50]}...")
+            print(f"    Entry 2: {entry.get('title', 'No title')[:50]}...")
+
+            # Merge the entries
+            merged_entry = merge_entries(existing_entry, entry)
+
+            # Replace the existing entry in unique_entries
+            for i, unique_entry in enumerate(unique_entries):
+                if unique_entry is existing_entry:
+                    unique_entries[i] = merged_entry
+                    break
+
+            # Update the doi_map
+            doi_map[doi] = merged_entry
+            merged_count += 1
+            duplicate_found = True
+
+        # Check for bibcode duplicates (only if not already found duplicate by DOI)
+        if not duplicate_found and bibcode and bibcode in bibcode_map:
+            existing_entry = bibcode_map[bibcode]
+            print(f"  Merging entries with same bibcode: {bibcode}")
+            print(f"    Entry 1: {existing_entry.get('title', 'No title')[:50]}...")
+            print(f"    Entry 2: {entry.get('title', 'No title')[:50]}...")
+
+            # Merge the entries
+            merged_entry = merge_entries(existing_entry, entry)
+
+            # Replace the existing entry in unique_entries
+            for i, unique_entry in enumerate(unique_entries):
+                if unique_entry is existing_entry:
+                    unique_entries[i] = merged_entry
+                    break
+
+            # Update the bibcode_map
+            bibcode_map[bibcode] = merged_entry
+            merged_count += 1
+            duplicate_found = True
+
+        # If no duplicate found, add as new entry
+        if not duplicate_found:
+            unique_entries.append(entry)
+            if doi:
+                doi_map[doi] = entry
+            if bibcode:
+                bibcode_map[bibcode] = entry
+
+    if merged_count > 0:
+        print(f"  Merged {merged_count} duplicate {description}")
+        print(f"  Reduced from {len(entries)} to {len(unique_entries)} entries")
+    else:
+        print(f"  No duplicates found in {description}")
+
+    return unique_entries, merged_count
+
 # Report results
 print(f"\n=== RESULTS ===")
 print(f"Found {len(new_entries)} new entries to add")
@@ -274,12 +401,27 @@ if new_entries:
         print(f"  + {title} ({year})")
         bib_database.entries.append(entry)
 
-    # Save updated cv.bib
-    with open('cv.bib', 'w') as fh:
-        bibtexparser.dump(bib_database, fh)
+    print(f"\nTotal entries before deduplication: {len(bib_database.entries)}")
+
+# Deduplicate all entries before writing (whether new entries were added or not)
+bib_database.entries, total_merged = deduplicate_entries(bib_database.entries, "cv.bib entries")
+
+# Save updated cv.bib
+with open('cv.bib', 'w') as fh:
+    bibtexparser.dump(bib_database, fh)
+
+if new_entries:
     print(f"\nUpdated cv.bib with {len(new_entries)} new entries")
+    if total_merged > 0:
+        print(f"Merged {total_merged} duplicate entries during the process")
 else:
-    print("\nNo new entries to add - cv.bib is up to date")
+    if total_merged > 0:
+        print(f"\nNo new entries added, but merged {total_merged} existing duplicates")
+        print("Updated cv.bib with deduplicated entries")
+    else:
+        print("\nNo new entries to add and no duplicates found - cv.bib is up to date")
+
+print(f"Final cv.bib contains {len(bib_database.entries)} unique entries")
 
 # Report changed entries (but don't modify them)
 if changed_entries:

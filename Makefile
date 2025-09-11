@@ -26,8 +26,10 @@ mwe: clean
 	${PDFLATEX} mwe.tex
 
 pubs: clean
+	python add_to_bib.py
 	python add_citations.py
 	python update_journals.py
+	python hindex.py
 	${PDFLATEX} pubs.tex
 	${BIBTEX} pubs
 	${PDFLATEX} pubs.tex
@@ -192,6 +194,5 @@ cv_TandP:
 	#${PDFLATEX} cv_TandP.tex
 
 
-clean: 
+clean:
 	@rm -f *.aux *.bbl *.blg *.dvi *.log *.out *.idv *.lg *.bcf
-
