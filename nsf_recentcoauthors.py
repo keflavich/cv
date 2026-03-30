@@ -11,7 +11,12 @@ number_of_coauthors = 3 # top 3...
 
 ads.config.token = get_dev_key()
 
-mypapers = ads.SearchQuery(author='Ginsburg, A', rows=300)
+# 2025-11-07 add...
+# so far not used below but it should be
+library_id = 'CFJYpXQMRTqHEAe0jOL3VQ'
+library_url = f'https://api.adsabs.harvard.edu/v1/biblib/libraries/{library_id}'
+
+mypapers = ads.SearchQuery(author='Ginsburg, A', rows=500)
 mypapers.execute()
 
 print("Found {0} papers matching Ginsburg, A".format(len(mypapers.articles)))
