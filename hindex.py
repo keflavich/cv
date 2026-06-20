@@ -264,6 +264,7 @@ if potential_duplicates > 0:
 print()
 print("cv.bib matches: (blank means good)")
 matches = {}
+cvbib_only = []  # cv.bib entries with no DOI/bibcode match in the filtered ADS set
 for entry in bib_database.entries:
     doi = entry.get('doi')
     bibcode = entry['adsurl'].split("/")[-1].replace("%26","&") if 'adsurl' in entry else None
@@ -278,6 +279,7 @@ for entry in bib_database.entries:
             match.append(art)
 
     if len(match) == 0:
+        cvbib_only.append(entry)
         print("No match for {0}, which is in cv.bib, in downloaded papers".format(entry.get('title')))
     elif len(match) > 1:
         print("Multiple matches for {0} among downloaded papers".format(entry.get('title')))
@@ -324,6 +326,7 @@ def resolve_multiple_matches(matches, art_bibcode, art_identifiers):
     return matches[:1]
 
 reverse_matches = {}
+ads_only_reliable = []  # filtered ADS papers with no DOI/bibcode match in cv.bib
 for art in papers:
     bibcode = art.get('bibcode', '')
     title = art.get('title', ['Unknown Title'])[0] if art.get('title') else 'Unknown Title'
@@ -340,6 +343,7 @@ for art in papers:
             match.append(entry)
 
     if len(match) == 0:
+        ads_only_reliable.append(art)
         print("No match for {0} in cv.bib: {1}".format(title, bibcode))
     elif len(match) > 1:
         print("Multiple matches for {0} in cv.bib.  doi: {1} bibcode: {2}".format(title, identifiers, bibcode))
@@ -371,134 +375,52 @@ print(f"Papers from ADS library (after filtering): {len(papers)}")
 print(f"Papers from cv.bib: {len(bib_database.entries)}")
 print(f"Difference: {len(bib_database.entries) - len(papers)} papers")
 
-# Look for papers in cv.bib that might not be in ADS library results
-cv_titles = set()
-for entry in bib_database.entries:
-    title = entry.get('title', '').lower().strip('{}').strip()
-    if title:
-        cv_titles.add(title)
+# Reliable mismatch analysis based on DOI + bibcode matching.
+# NOTE: an earlier version compared lowercased title strings, which produced
+# dozens of bogus "missing" papers whenever a title differed only in LaTeX /
+# Unicode encoding (e.g. {\ensuremath{\lambda}} vs the literal character).
+# We instead reuse the DOI/bibcode matches collected above (cvbib_only and
+# ads_only_reliable), which are authoritative.
+print(f"\n=== MISMATCH ANALYSIS (by DOI/bibcode) ===")
 
-ads_titles = set()
-for art in papers:
-    title_list = art.get('title', [''])
-    if title_list:
-        title = title_list[0].lower().strip()
-        if title:
-            ads_titles.add(title)
+print(f"\nFiltered ADS-library papers NOT found in cv.bib ({len(ads_only_reliable)}):")
+if ads_only_reliable:
+    for art in ads_only_reliable:
+        title = art.get('title', ['Unknown'])[0] if art.get('title') else 'Unknown'
+        print(f"  - {title[:70]} ({art.get('bibcode', '?')})")
+    print("   → Run 'python add_to_bib.py' to sync these into cv.bib")
+else:
+    print("  (none — cv.bib already contains every refereed library article)")
 
-cv_only = cv_titles - ads_titles
-ads_only = ads_titles - cv_titles
+print(f"\ncv.bib entries NOT in the filtered refereed-article set ({len(cvbib_only)}):")
+if cvbib_only:
+    for entry in cvbib_only:
+        title = entry.get('title', 'Unknown').strip('{}')
+        year = entry.get('year', '?')
+        etype = entry.get('ENTRYTYPE', '?')
+        print(f"  - {title[:70]} ({year}, @{etype})")
+    print("   → Typically theses, errata/corrigenda, proceedings, or pre-2006 /")
+    print("     non-article entries that are correctly excluded from the h-index.")
+else:
+    print("  (none)")
 
-# Detailed analysis of mismatches
-def analyze_mismatches():
-    print(f"\n=== DETAILED MISMATCH ANALYSIS ===")
-
-    # Check papers in cv.bib but not in ADS results
-    if cv_only:
-        print(f"\nPapers in cv.bib but NOT in filtered ADS results ({len(cv_only)}):")
-        cv_mismatch_papers = []
-        for entry in bib_database.entries:
-            title = entry.get('title', '').lower().strip('{}').strip()
-            if title in cv_only:
-                year = entry.get('year', 'Unknown')
-                journal = entry.get('journal', 'No journal')
-                doi = entry.get('doi', 'No DOI')
-                cv_mismatch_papers.append((title, year, journal, doi, entry))
-
-        for i, (title, year, journal, doi, entry) in enumerate(cv_mismatch_papers[:10]):
-            print(f"  {i+1}. {title[:60]}... ({year})")
-            print(f"     Journal: {journal}")
-            print(f"     DOI: {doi}")
-
-            # Check why this might not be in ADS results
-            reasons = []
-            if year and year.isdigit() and int(year) <= 2005:
-                reasons.append("pre-2006")
-            if not journal or journal.lower() in ['no journal', 'arxiv']:
-                reasons.append("no journal/arxiv-only")
-
-            if reasons:
-                print(f"     Possible exclusion reasons: {', '.join(reasons)}")
-            print()
-
-    # Check papers in ADS results but not in cv.bib
-    if ads_only:
-        print(f"\nPapers in ADS results but NOT in cv.bib ({len(ads_only)}):")
-        ads_mismatch_papers = []
-        for art in papers:
-            title_list = art.get('title', [''])
-            if title_list:
-                title = title_list[0].lower().strip()
-                if title in ads_only:
-                    year = art.get('year', 'Unknown')
-                    bibcode = art.get('bibcode', 'No bibcode')
-                    cites = art.get('citation_count', 0)
-                    ads_mismatch_papers.append((title, year, bibcode, cites, art))
-
-        for i, (title, year, bibcode, cites, art) in enumerate(ads_mismatch_papers[:10]):
-            print(f"  {i+1}. {title[:60]}... ({year}) - {cites} citations")
-            print(f"     Bibcode: {bibcode}")
-
-            # Check if this might be a recent addition to the library
-            identifiers = art.get('identifier', [])
-            if identifiers:
-                print(f"     Identifiers: {identifiers[:3]}...")  # Show first 3
-            print()
-
-analyze_mismatches()
-
-# Check for potential title normalization issues
-print(f"\n=== TITLE MATCHING ISSUES ===")
-potential_matches = []
-for cv_title in list(cv_only)[:5]:  # Check first 5 cv-only titles
-    for ads_title in list(ads_only)[:10]:  # Against first 10 ads-only titles
-        # Simple similarity check
-        cv_words = set(cv_title.split())
-        ads_words = set(ads_title.split())
-        common_words = cv_words & ads_words
-        if len(common_words) > 3 and len(common_words) / max(len(cv_words), len(ads_words)) > 0.6:
-            potential_matches.append((cv_title[:50], ads_title[:50]))
-
-if potential_matches:
-    print("Potential title matching issues (similar titles in different sets):")
-    for cv_title, ads_title in potential_matches:
-        print(f"  CV:  {cv_title}...")
-        print(f"  ADS: {ads_title}...")
-        print()
-
-print(f"\n=== SYNCHRONIZATION RECOMMENDATIONS ===")
-print("To resolve the h-index discrepancy, you have several options:")
-print()
-
-if ads_only:
-    print(f"1. ADD MISSING PAPERS TO cv.bib:")
-    print(f"   There are {len(ads_only)} papers in your ADS library that aren't in cv.bib")
-    print("   → Run 'python add_to_bib.py' again to sync your library with cv.bib")
-    print()
-
-if cv_only:
-    print(f"2. PAPERS IN cv.bib NOT MEETING CRITERIA:")
-    print(f"   There are {len(cv_only)} papers in cv.bib that don't meet hindex.py filtering:")
-    print("   → These might be non-refereed, non-astronomy, pre-2006, or non-articles")
-    print("   → Consider whether these should contribute to your h-index")
-    print()
-
-print("3. IMMEDIATE FIXES:")
-print("   Option A: Use cv.bib dataset in hindex.py (higher h-index, includes all papers)")
-print("   Option B: Apply same filtering to add_citations.py (lower h-index, refereed only)")
-print("   Option C: Manually review and clean up the mismatched papers")
-print()
-
-# Calculate what h-index would be if we used cv.bib data
-print("4. QUICK COMPARISON:")
+# QUICK COMPARISON: compute the cv.bib-based h-index from cv_cites.bib.
+# add_citations.py writes the per-paper 'citations' field to cv_cites.bib
+# (NOT to cv.bib), so the comparison must read cv_cites.bib.
+print(f"\n=== QUICK COMPARISON: cv_cites.bib vs filtered library ===")
 cv_citations = []
-for entry in bib_database.entries:
-    if 'citations' in entry:
-        try:
-            cites = int(entry['citations'])
-            cv_citations.append(cites)
-        except (ValueError, TypeError):
-            pass
+try:
+    with open('cv_cites.bib', 'r') as fh:
+        cv_cites_db = bibtexparser.load(
+            fh, parser=bibtexparser.bparser.BibTexParser(common_strings=True))
+    for entry in cv_cites_db.entries:
+        if 'citations' in entry:
+            try:
+                cv_citations.append(int(entry['citations']))
+            except (ValueError, TypeError):
+                pass
+except FileNotFoundError:
+    print("   cv_cites.bib not found — run add_citations.py first.")
 
 if cv_citations:
     cv_citations_desc = sorted(cv_citations, reverse=True)
@@ -509,13 +431,9 @@ if cv_citations:
         else:
             break
 
-    print(f"   If hindex.py used cv.bib data: h-index would be {cv_hindex}")
-    print(f"   Current hindex.py (ADS library filtered): h-index is {h_index}")
-    print(f"   Difference: {cv_hindex - h_index} (likely due to the {len(cv_only)} extra papers)")
+    print(f"   cv_cites.bib (all {len(cv_citations)} entries): h-index {cv_hindex}")
+    print(f"   hindex.py (refereed astronomy articles, post-2005): h-index {h_index}")
+    print(f"   Difference: {cv_hindex - h_index} "
+          f"(from the {len(cvbib_only)} cv.bib entries outside the filtered set)")
 else:
-    print("   Cannot calculate cv.bib h-index (no citation data found)")
-
-print(f"\n5. NEXT STEPS:")
-print("   → Examine the detailed mismatch analysis above")
-print("   → Decide which dataset better represents your publication record")
-print("   → Run the appropriate sync script (add_to_bib.py or manual cleanup)")
+    print("   No citation data found in cv_cites.bib (run add_citations.py).")

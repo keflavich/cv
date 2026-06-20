@@ -145,6 +145,12 @@ cv_erc:
 	${BIBTEX} cv_erc
 	${PDFLATEX} cv_erc.tex
 
+# Two-page "main achievements since 2022" CV (self-contained, no bibtex).
+# Reads citation/h-index counters from hindex.tex (run 'make pubs' to refresh them).
+cv_achievements_2022:
+	${PDFLATEX} cv_achievements_2022.tex
+	${PDFLATEX} cv_achievements_2022.tex
+
 cv_withrefs:
 	${PDFLATEX} cv_withrefs.tex
 	${BIBTEX} cv_withrefs
